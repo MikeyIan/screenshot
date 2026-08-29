@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!--
+        This tells the browser that we are using
+        standard UTF-8 characters.
+    -->
+    <meta charset="UTF-8">
+
+
+    <!--
+        This makes SCREENSHOT work properly
+        on phones, tablets, and computers.
+    -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <!--
+        The title displayed in the browser tab.
+    -->
+    <title>SCREENSHOT</title>
+
+
+    <!--
+        This connects our HTML page to our CSS file.
+
+        The CSS file will control the colors,
+        buttons, layout, fonts, and appearance
+        of our website.
+    -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVIGATION BAR
+         ===================================================== -->
+
+    <nav class="navbar">
+
+
+        <!--
+            Clicking SCREENSHOT takes the user
+            back to the home page.
+        -->
+
+        <a class="logo"
+           href="{{ url_for('index') }}">
+
+            SCREENSHOT
+
+        </a>
+
+
+        <!--
+            These are the navigation links.
+        -->
+
+        <div class="nav-links">
+
+
+            <!-- =================================================
+                 LOGGED-IN USER
+                 ================================================= -->
+
+            {% if session.get("user_id") %}
+
+
+                <!--
+                    Display the username of the
+                    currently logged-in user.
+                -->
+
+                <span class="welcome">
+
+                    Welcome,
+                    {{ session["username"] }}
+
+                </span>
+
+
+                <!--
+                    Link to the upload page.
+                -->
+
+                <a href="{{ url_for('upload') }}">
+
+                    Upload
+
+                </a>
+
+
+                <!--
+                    Link to log out.
+                -->
+
+                <a href="{{ url_for('logout') }}">
+
+                    Logout
+
+                </a>
+
+
+            <!-- =================================================
+                 USER IS NOT LOGGED IN
+                 ================================================= -->
+
+            {% else %}
+
+
+                <!--
+                    User can log into their account.
+                -->
+
+                <a href="{{ url_for('login') }}">
+
+                    Login
+
+                </a>
+
+
+                <!--
+                    User can create a new account.
+                -->
+
+                <a href="{{ url_for('register') }}">
+
+                    Register
+
+                </a>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- =====================================================
+         MAIN WEBSITE CONTENT
+         ===================================================== -->
+
+    <main class="container">
+
+
+        <!--
+            Flask can display messages to the user.
+
+            For example:
+
+            "Account created successfully!"
+
+            "Screenshot uploaded!"
+
+            "Incorrect password!"
+
+            These messages come from our Python app.py.
+        -->
+
+        {% with messages = get_flashed_messages() %}
+
+
+            {% if messages %}
+
+
+                {% for message in messages %}
+
+
+                    <div class="message">
+
+                        {{ message }}
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            {% endif %}
+
+
+        {% endwith %}
+
+
+
+        <!-- =================================================
+             PAGE CONTENT
+             ================================================= -->
+
+        <!--
+            Other HTML pages will put their content
+            inside this block.
+
+            For example:
+
+            index.html
+            login.html
+            register.html
+            upload.html
+            edit.html
+        -->
+
+        {% block content %}
+
+        {% endblock %}
+
+
+    </main>
+
+
+</body>
+
+</html>

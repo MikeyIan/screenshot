@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- =====================================================
+     SCREENSHOT LOGIN PAGE
+     =====================================================
+
+     This page allows an existing user to log into
+     their SCREENSHOT account.
+
+     The username and password are sent to the
+     login() function in app.py.
+     ===================================================== -->
+
+
+<div class="form-container">
+
+
+    <!-- =================================================
+         PAGE TITLE
+         ================================================= -->
+
+    <h1>Login to SCREENSHOT</h1>
+
+
+    <p>
+        Sign in to upload and manage your
+        video game screenshots.
+    </p>
+
+
+    <!-- =================================================
+         LOGIN FORM
+         ================================================= -->
+
+    <form method="POST">
+
+
+        <!-- =============================================
+             USERNAME
+             ============================================= -->
+
+        <label for="username">
+
+            Username
+
+        </label>
+
+
+        <!--
+            app.py gets this value with:
+
+            request.form["username"]
+        -->
+
+        <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            required
+        >
+
+
+        <!-- =============================================
+             PASSWORD
+             ============================================= -->
+
+        <label for="password">
+
+            Password
+
+        </label>
+
+
+        <!--
+            type="password" hides the password
+            while the user types.
+        -->
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+        >
+
+
+        <!-- =============================================
+             LOGIN BUTTON
+             ============================================= -->
+
+        <button
+            class="button"
+            type="submit"
+        >
+
+            Login
+
+        </button>
+
+
+    </form>
+
+
+    <!-- =================================================
+         REGISTER LINK
+         ================================================= -->
+
+    <p>
+
+        Don't have an account?
+
+        <a href="{{ url_for('register') }}">
+
+            Create an account
+
+        </a>
+
+    </p>
+
+
+</div>
+
+
+{% endblock %}

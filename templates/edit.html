@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- =====================================================
+     SCREENSHOT EDIT PAGE
+     =====================================================
+
+     This page allows the owner of a screenshot to edit:
+
+     - Screenshot title
+     - Screenshot comment
+
+     The actual security check happens in app.py.
+
+     A user cannot edit another user's screenshot.
+     ===================================================== -->
+
+
+<div class="form-container">
+
+
+    <!-- =================================================
+         PAGE TITLE
+         ================================================= -->
+
+    <h1>Edit Screenshot</h1>
+
+
+    <p>
+        Update the information for your screenshot.
+    </p>
+
+
+    <!-- =================================================
+         CURRENT SCREENSHOT
+         ================================================= -->
+
+    <!--
+        Show the existing screenshot so the user knows
+        which screenshot they are editing.
+    -->
+
+    <img
+        class="edit-image"
+        src="{{ url_for(
+            'uploaded_file',
+            filename=screenshot['filename']
+        ) }}"
+        alt="{{ screenshot['title'] }}"
+    >
+
+
+    <!-- =================================================
+         EDIT FORM
+         ================================================= -->
+
+    <form method="POST">
+
+
+        <!-- =============================================
+             TITLE
+             ============================================= -->
+
+        <label for="title">
+
+            Screenshot Title
+
+        </label>
+
+
+        <!--
+            The existing title is automatically placed
+            inside the text box.
+
+            screenshot['title'] comes from the database.
+        -->
+
+        <input
+            type="text"
+            id="title"
+            name="title"
+            value="{{ screenshot['title'] }}"
+            required
+        >
+
+
+        <!-- =============================================
+             COMMENT
+             ============================================= -->
+
+        <label for="comment">
+
+            Comment
+
+        </label>
+
+
+        <!--
+            The existing comment is automatically
+            placed inside the text area.
+        -->
+
+        <textarea
+            id="comment"
+            name="comment"
+            rows="6"
+        >{{ screenshot['comment'] }}</textarea>
+
+
+        <!-- =============================================
+             SAVE BUTTON
+             ============================================= -->
+
+        <button
+            class="button"
+            type="submit"
+        >
+
+            Save Changes
+
+        </button>
+
+
+    </form>
+
+
+    <!-- =================================================
+         CANCEL
+         ================================================= -->
+
+    <a
+        class="cancel"
+        href="{{ url_for('index') }}"
+    >
+
+        ← Cancel
+
+    </a>
+
+
+</div>
+
+
+{% endblock %}

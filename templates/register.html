@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- =====================================================
+     SCREENSHOT REGISTRATION PAGE
+     =====================================================
+
+     This page allows a new user to create an account.
+
+     The user enters:
+     - Username
+     - Password
+
+     When the user presses Register, the information
+     is sent to the register() function in app.py.
+     ===================================================== -->
+
+
+<div class="form-container">
+
+
+    <!-- =================================================
+         PAGE TITLE
+         ================================================= -->
+
+    <h1>Create Your SCREENSHOT Account</h1>
+
+
+    <p>
+        Join SCREENSHOT and share your favorite
+        video game moments.
+    </p>
+
+
+    <!-- =================================================
+         REGISTRATION FORM
+         ================================================= -->
+
+    <!--
+        method="POST" sends the username and password
+        to our Python Flask application.
+    -->
+
+    <form method="POST">
+
+
+        <!-- =============================================
+             USERNAME
+             ============================================= -->
+
+        <label for="username">
+
+            Username
+
+        </label>
+
+
+        <!--
+            The name="username" is important.
+
+            It allows app.py to find the username
+            using:
+
+            request.form["username"]
+        -->
+
+        <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            required
+        >
+
+
+        <!-- =============================================
+             PASSWORD
+             ============================================= -->
+
+        <label for="password">
+
+            Password
+
+        </label>
+
+
+        <!--
+            type="password" hides the password while
+            the user types it.
+        -->
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+        >
+
+
+        <!-- =============================================
+             REGISTER BUTTON
+             ============================================= -->
+
+        <button
+            class="button"
+            type="submit"
+        >
+
+            Create Account
+
+        </button>
+
+
+    </form>
+
+
+    <!-- =================================================
+         LOGIN LINK
+         ================================================= -->
+
+    <p>
+
+        Already have an account?
+
+        <a href="{{ url_for('login') }}">
+
+            Login here
+
+        </a>
+
+    </p>
+
+
+</div>
+
+
+{% endblock %}
