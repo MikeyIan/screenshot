@@ -49,9 +49,10 @@ UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-# Create the uploads folder if it does not exist.
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
+# Vercel uses a read-only filesystem, so we do not create
+# the uploads folder when the application is deployed there.
+if not os.environ.get("VERCEL"):
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ------------------------------------------------------------
 # ALLOWED IMAGE TYPES
