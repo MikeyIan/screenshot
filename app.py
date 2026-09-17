@@ -41,7 +41,7 @@ app.secret_key = "screenshot-secret-key-change-this"
 # DATABASE SETTINGS
 # ------------------------------------------------------------
 
-DATABASE = "screenshot.db"
+DATABASE = "/tmp/screenshot.db"
 
 # Uploaded screenshots will be stored here.
 UPLOAD_FOLDER = "uploads"
@@ -674,12 +674,17 @@ def uploaded_file(filename):
 # START WEBSITE
 # ============================================================
 
+# ============================================================
+# INITIALIZE DATABASE
+# ============================================================
+
+# Create the database and tables when the application starts.
+init_db()
+
+
+# ============================================================
+# START WEBSITE LOCALLY
+# ============================================================
+
 if __name__ == "__main__":
-
-    # Create the database and tables.
-    init_db()
-
-    # Start the website.
-    app.run(
-        debug=True
-    )
+    app.run(debug=True)
