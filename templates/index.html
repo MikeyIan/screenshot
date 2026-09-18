@@ -2,270 +2,368 @@
 
 {% block content %}
 
-<!-- =====================================================
-     SCREENSHOT HOME PAGE
-     =====================================================
 
-     This is the main gallery for the website.
-
-     It displays:
-     - Game screenshots
-     - Screenshot titles
-     - Comments
-     - Usernames
-     - Edit buttons
-     - Delete buttons
-
-     The screenshots come from the database through
-     the Python app.py file.
-     ===================================================== -->
-
-
-<!-- =====================================================
-     HERO SECTION
-     ===================================================== -->
+<!-- =========================================
+     HERO
+========================================== -->
 
 <section class="hero">
 
-    <h1>SCREENSHOT</h1>
-
-    <p>
-        Share your favorite video game moments.
-    </p>
+    <div class="hero-glow hero-glow-left"></div>
+    <div class="hero-glow hero-glow-right"></div>
 
 
-    <!--
-        If the user is logged in, show the Upload button.
-    -->
+    <div class="hero-content">
 
-    {% if session.get("user_id") %}
-
-        <a
-            class="button"
-            href="{{ url_for('upload') }}"
-        >
-
-            Upload Screenshot
-
-        </a>
+        <p class="welcome">
+            W E L C O M E &nbsp; T O
+        </p>
 
 
-    {% else %}
+        <h1 class="mikeyian">
+            MikeyIan
+        </h1>
 
-        <!--
-            If the user isn't logged in, encourage them
-            to create an account.
-        -->
 
-        <a
-            class="button"
-            href="{{ url_for('register') }}"
-        >
+        <h2 class="screen-shot">
+            SCREEN SHOT
+        </h2>
 
-            Create Account
 
-        </a>
+        <div class="tagline">
 
-    {% endif %}
+            <span>CAPTURE</span>
+            <b>•</b>
+
+            <span>SHARE</span>
+            <b>•</b>
+
+            <span>PLAY</span>
+            <b>•</b>
+
+            <span>REPEAT</span>
+
+        </div>
+
+
+        <p class="hero-description">
+            A community for gamers to share
+            their best gaming moments.
+        </p>
+
+
+        <div class="hero-buttons">
+
+            {% if session.get("user_id") %}
+
+                <a
+                    href="{{ url_for('upload') }}"
+                    class="button button-pink"
+                >
+                    ⬆ Upload Screenshot
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{{ url_for('register') }}"
+                    class="button button-pink"
+                >
+                    Join MikeyIan
+                </a>
+
+            {% endif %}
+
+
+            <a
+                href="#gallery"
+                class="button button-blue"
+            >
+                ▣ Browse Gallery
+            </a>
+
+        </div>
+
+    </div>
 
 </section>
 
 
 
-<!-- =====================================================
+<!-- =========================================
+     COMMUNITY STATS
+========================================== -->
+
+<section class="stats">
+
+    <div class="stat">
+
+        <div class="stat-icon">
+            🖼
+        </div>
+
+        <div>
+
+            <strong>
+                {{ screenshots|length }}
+            </strong>
+
+            <span>
+                Screenshots
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-icon cyan">
+            🎮
+        </div>
+
+        <div>
+
+            <strong>
+                MikeyIan
+            </strong>
+
+            <span>
+                Gaming Community
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-icon">
+            ∞
+        </div>
+
+        <div>
+
+            <strong>
+                Good Times
+            </strong>
+
+            <span>
+                Play • Share • Repeat
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
      SCREENSHOT GALLERY
-     ===================================================== -->
+========================================== -->
 
-<section class="gallery">
+<section
+    class="gallery-section"
+    id="gallery"
+>
 
+    <div class="section-heading">
 
-    <!--
-        Check whether there are screenshots
-        in the database.
-    -->
+        <h2>
+            <span>☆</span>
+            Recent Screenshots
+        </h2>
+
+    </div>
+
 
     {% if screenshots %}
 
+        <div class="gallery-grid">
 
-        <!--
-            Loop through every screenshot.
+            {% for screenshot in screenshots %}
 
-            "screenshot" represents one record
-            from our database.
-        -->
-
-        {% for screenshot in screenshots %}
+                <article class="screenshot-card">
 
 
-            <!-- =========================================
-                 SCREENSHOT CARD
-                 ========================================= -->
+                    <!-- IMAGE -->
 
-            <article class="card">
+                    <div class="image-container">
 
+                        {% if screenshot.image_url %}
 
-                <!--
-                    Display the uploaded image.
-
-                    The filename comes from the database.
-                -->
-
-                <img
-                    src="{{ url_for(
-                        'uploaded_file',
-                        filename=screenshot['filename']
-                    ) }}"
-                    alt="{{ screenshot['title'] }}"
-                >
-
-
-                <!-- =====================================
-                     SCREENSHOT INFORMATION
-                     ===================================== -->
-
-                <div class="card-content">
-
-
-                    <!-- Screenshot title -->
-
-                    <h2>
-
-                        {{ screenshot["title"] }}
-
-                    </h2>
-
-
-                    <!--
-                        Show who uploaded the screenshot.
-                    -->
-
-                    <p class="author">
-
-                        Uploaded by
-
-                        <strong>
-
-                            {{ screenshot["username"] }}
-
-                        </strong>
-
-                    </p>
-
-
-                    <!--
-                        Display the user's comment.
-                    -->
-
-                    <p>
-
-                        {{ screenshot["comment"] }}
-
-                    </p>
-
-
-
-                    <!-- =================================
-                         EDIT / DELETE
-                         ================================= -->
-
-                    <!--
-                        IMPORTANT:
-
-                        Only the person who owns the
-                        screenshot gets these buttons.
-                    -->
-
-                    {% if session.get("user_id")
-                          == screenshot["user_id"] %}
-
-
-                        <div class="actions">
-
-
-                            <!-- =========================
-                                 EDIT BUTTON
-                                 ========================= -->
-
-                            <a
-                                class="edit-button"
-                                href="{{ url_for(
-                                    'edit',
-                                    screenshot_id=screenshot['id']
-                                ) }}"
+                            <img
+                                src="{{ screenshot.image_url }}"
+                                alt="{{ screenshot.title }}"
                             >
 
-                                Edit
+                        {% elif screenshot.filename %}
 
-                            </a>
+                            <div class="image-placeholder">
+
+                                <span>🎮</span>
+
+                                <p>
+                                    Image storage
+                                    being connected
+                                </p>
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="image-placeholder">
+
+                                <span>🎮</span>
+
+                                <p>
+                                    Screenshot
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
 
 
+                    <!-- SCREENSHOT INFORMATION -->
 
-                            <!-- =========================
-                                 DELETE BUTTON
-                                 ========================= -->
+                    <div class="card-content">
 
-                            <form
-                                action="{{ url_for(
-                                    'delete',
-                                    screenshot_id=screenshot['id']
-                                ) }}"
-                                method="POST"
+                        <h3>
+                            {{ screenshot.title }}
+                        </h3>
 
-                                onsubmit="return confirm(
-                                    'Are you sure you want to delete this screenshot?'
-                                );"
-                            >
 
-                                <button
-                                    class="delete-button"
-                                    type="submit"
-                                >
+                        {% if screenshot.comment %}
 
-                                    Delete
+                            <p class="comment">
+                                {{ screenshot.comment }}
+                            </p>
 
-                                </button>
+                        {% endif %}
 
-                            </form>
 
+                        <div class="card-bottom">
+
+                            <span class="uploaded-by">
+
+                                Uploaded by
+
+                                <strong>
+                                    {{ screenshot.username }}
+                                </strong>
+
+                            </span>
+
+
+                            {% if
+                                session.get("user_id")
+                                == screenshot.user_id
+                            %}
+
+                                <div class="card-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'edit',
+                                            screenshot_id=screenshot.id
+                                        ) }}"
+                                        class="edit-link"
+                                    >
+                                        Edit
+                                    </a>
+
+
+                                    <form
+                                        action="{{ url_for(
+                                            'delete',
+                                            screenshot_id=screenshot.id
+                                        ) }}"
+                                        method="POST"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="delete-button"
+                                            onclick="
+                                                return confirm(
+                                                    'Delete this screenshot?'
+                                                )
+                                            "
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            {% endif %}
 
                         </div>
 
+                    </div>
 
-                    {% endif %}
+                </article>
 
+            {% endfor %}
 
-                </div>
-
-
-            </article>
-
-
-        {% endfor %}
+        </div>
 
 
     {% else %}
 
 
-        <!-- =============================================
-             NO SCREENSHOTS YET
-             ============================================= -->
+        <!-- =================================
+             EMPTY GALLERY
+        ================================== -->
 
-        <div class="empty">
+        <div class="empty-gallery">
 
-            <h2>
-                No screenshots yet.
-            </h2>
+            <div class="empty-controller">
+                🎮
+            </div>
+
+            <h3>
+                No screenshots yet
+            </h3>
 
             <p>
-                Be the first person to upload
-                a gaming moment!
+                Be the first gamer to share
+                a screenshot.
             </p>
+
+
+            {% if session.get("user_id") %}
+
+                <a
+                    href="{{ url_for('upload') }}"
+                    class="button button-pink"
+                >
+                    Upload First Screenshot
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{{ url_for('register') }}"
+                    class="button button-blue"
+                >
+                    Create Account
+                </a>
+
+            {% endif %}
 
         </div>
 
 
     {% endif %}
-
 
 </section>
 
