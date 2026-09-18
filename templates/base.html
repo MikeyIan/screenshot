@@ -3,59 +3,100 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>MikeyIan Screen Shot</title>
 
+    <!-- Neon website CSS -->
     <link
         rel="stylesheet"
         href="{{ url_for('static', filename='style.css') }}"
     >
 </head>
 
+
 <body>
 
     <!-- =========================================
-         NAVIGATION
+         NAVIGATION BAR
     ========================================== -->
 
     <nav class="navbar">
 
-        <a href="{{ url_for('index') }}" class="logo">
-            <span class="controller-logo">🎮</span>
+        <!-- Logo -->
+        <a
+            href="{{ url_for('index') }}"
+            class="logo"
+        >
+
+            <span class="controller-logo">
+                🎮
+            </span>
 
             <span class="logo-text">
-                <strong>MikeyIan</strong>
-                <small>SCREEN SHOT</small>
+
+                <strong>
+                    MikeyIan
+                </strong>
+
+                <small>
+                    SCREEN SHOT
+                </small>
+
             </span>
+
         </a>
 
 
+        <!-- Navigation Links -->
         <div class="nav-links">
 
             <a href="{{ url_for('index') }}">
                 Home
             </a>
 
+
+            <!-- Logged In User -->
             {% if session.get("user_id") %}
 
                 <a href="{{ url_for('upload') }}">
                     Upload
                 </a>
 
+
+                <a href="{{ url_for('index') }}#gallery">
+                    Gallery
+                </a>
+
+
                 <span class="username">
-                    {{ session.get("username") }}
+
+                    🎮 {{ session.get("username") }}
+
                 </span>
+
 
                 <a href="{{ url_for('logout') }}">
                     Logout
                 </a>
 
+
+            <!-- Logged Out User -->
             {% else %}
+
+                <a href="{{ url_for('index') }}#gallery">
+                    Gallery
+                </a>
+
 
                 <a href="{{ url_for('login') }}">
                     Login
                 </a>
+
 
                 <a
                     href="{{ url_for('register') }}"
@@ -71,6 +112,7 @@
     </nav>
 
 
+
     <!-- =========================================
          FLASH MESSAGES
     ========================================== -->
@@ -84,7 +126,9 @@
                 {% for message in messages %}
 
                     <div class="flash-message">
+
                         {{ message }}
+
                     </div>
 
                 {% endfor %}
@@ -96,6 +140,7 @@
     </div>
 
 
+
     <!-- =========================================
          PAGE CONTENT
     ========================================== -->
@@ -103,9 +148,11 @@
     <main>
 
         {% block content %}
+
         {% endblock %}
 
     </main>
+
 
 
     <!-- =========================================
@@ -115,18 +162,31 @@
     <footer>
 
         <p>
-            MikeyIan Screen Shot
+
+            <strong>
+                MikeyIan Screen Shot
+            </strong>
+
             <span>•</span>
+
             Capture
+
             <span>•</span>
+
             Share
+
             <span>•</span>
+
             Play
+
             <span>•</span>
+
             Repeat
+
         </p>
 
     </footer>
+
 
 </body>
 
