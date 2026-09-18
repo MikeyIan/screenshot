@@ -49,10 +49,9 @@ UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-# Vercel uses a read-only filesystem, so we do not create
-# the uploads folder when the application is deployed there.
-if not os.environ.get("VERCEL"):
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# Create the uploads folder if it does not exist.
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 
 # ------------------------------------------------------------
 # ALLOWED IMAGE TYPES
@@ -674,17 +673,20 @@ def uploaded_file(filename):
 # START WEBSITE
 # ============================================================
 
-# ============================================================
+i# ============================================================
 # INITIALIZE DATABASE
 # ============================================================
 
-# Create the database and tables when the application starts.
+# Create the database and tables when Flask starts.
 init_db()
 
 
 # ============================================================
-# START WEBSITE LOCALLY
+# START LOCAL DEVELOPMENT SERVER
 # ============================================================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    app.run(
+        debug=True
+    )
