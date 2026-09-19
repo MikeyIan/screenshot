@@ -251,16 +251,21 @@
 
                         <div class="card-bottom">
 
-                            <span class="uploaded-by">
+                          <span class="uploaded-by">
 
-                                Uploaded by
+    Uploaded by
 
-                                <strong>
-                                    {{ screenshot.username }}
-                                </strong>
+    <a
+        href="{{ url_for(
+            'profile',
+            username=screenshot.username
+        ) }}"
+        class="profile-link"
+    >
+        {{ screenshot.username }}
+    </a>
 
-                            </span>
-
+</span>
 
                             {% if
                                 session.get("user_id")
