@@ -2,144 +2,102 @@
 
 {% block content %}
 
-<!-- =====================================================
-     SCREENSHOT EDIT PAGE
-     =====================================================
-
-     This page allows the owner of a screenshot to edit:
-
-     - Screenshot title
-     - Screenshot comment
-
-     The actual security check happens in app.py.
-
-     A user cannot edit another user's screenshot.
-     ===================================================== -->
-
-
-<div class="form-container">
-
-
-    <!-- =================================================
-         PAGE TITLE
-         ================================================= -->
+<div class="edit-container">
 
     <h1>Edit Screenshot</h1>
 
-
     <p>
-        Update the information for your screenshot.
+        Update the title or comment for your screenshot.
     </p>
 
 
-    <!-- =================================================
-         CURRENT SCREENSHOT
-         ================================================= -->
+    <!-- CURRENT SCREENSHOT -->
 
-    <!--
-        Show the existing screenshot so the user knows
-        which screenshot they are editing.
-    -->
+    <div class="edit-image-container">
 
-    <img
-        class="edit-image"
-        src="{{ url_for(
-            'uploaded_file',
-            filename=screenshot['filename']
+        {% if screenshot.image_url %}
+
+            <img
+                src="{{ screenshot.image_url }}"
+                alt="{{ screenshot.title }}"
+                class="edit-image"
+            >
+
+        {% else %}
+
+            <div class="image-placeholder">
+
+                <span>🎮</span>
+
+                <p>
+                    Screenshot image storage
+                    is being connected.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- EDIT FORM -->
+
+    <form
+        method="POST"
+        action="{{ url_for(
+            'edit',
+            screenshot_id=screenshot.id
         ) }}"
-        alt="{{ screenshot['title'] }}"
     >
 
+        <div class="form-group">
 
-    <!-- =================================================
-         EDIT FORM
-         ================================================= -->
+            <label for="title">
+                Screenshot Title
+            </label>
 
-    <form method="POST">
+            <input
+                type="text"
+                id="title"
+                name="title"
+                value="{{ screenshot.title }}"
+                required
+            >
 
-
-        <!-- =============================================
-             TITLE
-             ============================================= -->
-
-        <label for="title">
-
-            Screenshot Title
-
-        </label>
+        </div>
 
 
-        <!--
-            The existing title is automatically placed
-            inside the text box.
+        <div class="form-group">
 
-            screenshot['title'] comes from the database.
-        -->
+            <label for="comment">
+                Comment
+            </label>
 
-        <input
-            type="text"
-            id="title"
-            name="title"
-            value="{{ screenshot['title'] }}"
-            required
-        >
+            <textarea
+                id="comment"
+                name="comment"
+                rows="5"
+                placeholder="Tell us about this screenshot..."
+            >{{ screenshot.comment or '' }}</textarea>
 
-
-        <!-- =============================================
-             COMMENT
-             ============================================= -->
-
-        <label for="comment">
-
-            Comment
-
-        </label>
+        </div>
 
 
-        <!--
-            The existing comment is automatically
-            placed inside the text area.
-        -->
-
-        <textarea
-            id="comment"
-            name="comment"
-            rows="6"
-        >{{ screenshot['comment'] }}</textarea>
-
-
-        <!-- =============================================
-             SAVE BUTTON
-             ============================================= -->
-
-        <button
-            class="button"
-            type="submit"
-        >
-
+        <button type="submit">
             Save Changes
-
         </button>
 
 
+        <a
+            href="{{ url_for('index') }}"
+            class="button button-blue"
+        >
+            Cancel
+        </a>
+
     </form>
 
-
-    <!-- =================================================
-         CANCEL
-         ================================================= -->
-
-    <a
-        class="cancel"
-        href="{{ url_for('index') }}"
-    >
-
-        ← Cancel
-
-    </a>
-
-
 </div>
-
 
 {% endblock %}
