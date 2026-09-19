@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="profile-page">
+
+    <div class="profile-header">
+
+        <div class="profile-avatar">
+            🎮
+        </div>
+
+        <p class="auth-label">
+            PLAYER PROFILE
+        </p>
+
+        <h1>
+            {{ profile_user.username }}
+        </h1>
+
+        <div class="profile-stats">
+
+            <div class="profile-stat">
+
+                <strong>
+                    {{ screenshots|length }}
+                </strong>
+
+                <span>
+                    Screenshots
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-gallery">
+
+        <h2>
+            🖼 {{ profile_user.username }}'s Screenshots
+        </h2>
+
+
+        {% if screenshots %}
+
+            <div class="gallery-grid">
+
+                {% for screenshot in screenshots %}
+
+                    <article class="screenshot-card">
+
+                        <div class="image-container">
+
+                            {% if screenshot.image_url %}
+
+                                <img
+                                    src="{{ screenshot.image_url }}"
+                                    alt="{{ screenshot.title }}"
+                                >
+
+                            {% else %}
+
+                                <div class="image-placeholder">
+
+                                    <span>🎮</span>
+
+                                    <p>
+                                        Screenshot unavailable
+                                    </p>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="card-content">
+
+                            <h3>
+                                {{ screenshot.title }}
+                            </h3>
+
+
+                            {% if screenshot.comment %}
+
+                                <p class="comment">
+                                    {{ screenshot.comment }}
+                                </p>
+
+                            {% endif %}
+
+
+                            <div class="card-bottom">
+
+                                <span class="uploaded-by">
+
+                                    Uploaded by
+
+                                    <strong>
+                                        {{ profile_user.username }}
+                                    </strong>
+
+                                </span>
+
+
+                                {% if
+                                    session.get("user_id")
+                                    == screenshot.user_id
+                                %}
+
+                                    <div class="card-actions">
+
+                                        <a
+                                            href="{{ url_for(
+                                                'edit',
+                                                screenshot_id=screenshot.id
+                                            ) }}"
+                                            class="edit-link"
+                                        >
+                                            Edit
+                                        </a>
+
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for(
+                                                'delete',
+                                                screenshot_id=screenshot.id
+                                            ) }}"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="delete-button"
+                                                onclick="
+                                                    return confirm(
+                                                        'Delete this screenshot?'
+                                                    )
+                                                "
+                                            >
+                                                Delete
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="empty-gallery">
+
+                <div class="empty-controller">
+                    🎮
+                </div>
+
+                <h3>
+                    No screenshots yet
+                </h3>
+
+                <p>
+                    {{ profile_user.username }}
+                    hasn't uploaded anything yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}
