@@ -442,7 +442,76 @@ def logout():
         url_for("index")
     )
 
+# ============================================================
+# USER PROFILE
+# ============================================================
 
+@app.route("/profile/<username>")
+def profile(username):
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Find the user
+    cursor.execute("""
+        SELECT
+            id,
+            username
+        FROM users
+        WHERE username = %s
+    """, (
+        username,
+    ))
+
+    profile_user = cursor.fetchone()
+
+    if profile_user is None:
+
+        cursor.close()
+        db.close()
+
+        flash("User not found.")
+
+        return redirect(
+            url_for("index")
+        )
+
+    # Get all screenshots uploaded by this user
+    cursor.execute("""
+        SELECT
+            id,
+            user_id,
+            title,
+            comment,
+            filename,
+            image_url,
+            created_at
+        FROM screenshots
+        WHERE user_id = %s
+        ORDER BY created_at DESC
+    """, (
+        profile_user["id"],
+    ))
+
+    screenshots = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    # Generate temporary Neon Object Storage URLs
+    for screenshot in screenshots:
+
+        if screenshot["filename"]:
+
+            screenshot["image_url"] = create_image_url(
+                screenshot["filename"]
+            )
+
+    return render_template(
+        "profile.html",
+        profile_user=profile_user,
+        screenshots=screenshots
+    )
 # ============================================================
 # UPLOAD SCREENSHOT
 # ============================================================
