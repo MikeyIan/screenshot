@@ -1335,3 +1335,128 @@ footer span {
         letter-spacing: 3px;
     }
 }
+/* =========================================================
+   PLAYER PROFILE
+========================================================= */
+
+.profile-page {
+    width: 92%;
+    max-width: 1400px;
+
+    margin: 0 auto;
+    padding: 60px 0 100px;
+}
+
+
+.profile-header {
+    text-align: center;
+
+    padding: 45px 20px;
+    margin-bottom: 50px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(136, 44, 255, 0.18),
+            transparent 60%
+        );
+
+    border: 1px solid #2b3850;
+    border-radius: 18px;
+}
+
+
+.profile-avatar {
+    font-size: 75px;
+
+    margin-bottom: 15px;
+
+    filter:
+        drop-shadow(0 0 12px #b73cff)
+        drop-shadow(0 0 25px #00d9ff);
+}
+
+
+.profile-header h1 {
+    color: #ff63fa;
+
+    font-size: 48px;
+
+    margin: 10px 0 30px;
+
+    text-shadow:
+        0 0 8px #ff00ff,
+        0 0 20px rgba(255, 0, 255, 0.6);
+}
+
+
+.profile-stats {
+    display: flex;
+    justify-content: center;
+}
+
+
+.profile-stat {
+    min-width: 160px;
+
+    padding: 18px 30px;
+
+    background: #050a14;
+
+    border: 1px solid #1edfff;
+    border-radius: 10px;
+
+    box-shadow:
+        0 0 15px rgba(0, 217, 255, 0.15);
+}
+
+
+.profile-stat strong {
+    display: block;
+
+    color: #2de7ff;
+
+    font-size: 30px;
+
+    text-shadow:
+        0 0 10px #00d9ff;
+}
+
+
+.profile-stat span {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #929eb3;
+
+    font-size: 13px;
+}
+
+
+.profile-gallery h2 {
+    margin-bottom: 30px;
+
+    color: white;
+
+    font-size: 27px;
+}
+
+
+.profile-link {
+    color: #25dfff;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    transition: 0.2s;
+}
+
+
+.profile-link:hover {
+    color: #ff63fa;
+
+    text-shadow:
+        0 0 8px #ff00ff;
+}
