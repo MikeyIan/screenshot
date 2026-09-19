@@ -2,138 +2,86 @@
 
 {% block content %}
 
-<!-- =====================================================
-     SCREENSHOT REGISTRATION PAGE
-     =====================================================
+<section class="auth-page">
 
-     This page allows a new user to create an account.
+    <div class="auth-card">
 
-     The user enters:
-     - Username
-     - Password
+        <div class="auth-icon">
+            👾
+        </div>
 
-     When the user presses Register, the information
-     is sent to the register() function in app.py.
-     ===================================================== -->
+        <p class="auth-label">
+            CREATE PLAYER
+        </p>
 
+        <h1>
+            Join MikeyIan
+        </h1>
 
-<div class="form-container">
+        <p class="auth-subtitle">
+            Create your account and start sharing
+            your gaming screenshots.
+        </p>
 
+        <form method="POST">
 
-    <!-- =================================================
-         PAGE TITLE
-         ================================================= -->
+            <div class="form-group">
 
-    <h1>Create Your SCREENSHOT Account</h1>
+                <label for="username">
+                    Username
+                </label>
 
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Choose a username"
+                    autocomplete="username"
+                    required
+                >
 
-    <p>
-        Join SCREENSHOT and share your favorite
-        video game moments.
-    </p>
+            </div>
 
+            <div class="form-group">
 
-    <!-- =================================================
-         REGISTRATION FORM
-         ================================================= -->
+                <label for="password">
+                    Password
+                </label>
 
-    <!--
-        method="POST" sends the username and password
-        to our Python Flask application.
-    -->
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    autocomplete="new-password"
+                    required
+                >
 
-    <form method="POST">
+            </div>
 
+            <button
+                type="submit"
+                class="auth-submit"
+            >
+                CREATE ACCOUNT
+            </button>
 
-        <!-- =============================================
-             USERNAME
-             ============================================= -->
+        </form>
 
-        <label for="username">
+        <div class="auth-bottom">
 
-            Username
+            <p>
+                Already have an account?
+            </p>
 
-        </label>
+            <a href="{{ url_for('login') }}">
+                Login
+            </a>
 
+        </div>
 
-        <!--
-            The name="username" is important.
+    </div>
 
-            It allows app.py to find the username
-            using:
-
-            request.form["username"]
-        -->
-
-        <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Enter your username"
-            required
-        >
-
-
-        <!-- =============================================
-             PASSWORD
-             ============================================= -->
-
-        <label for="password">
-
-            Password
-
-        </label>
-
-
-        <!--
-            type="password" hides the password while
-            the user types it.
-        -->
-
-        <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            required
-        >
-
-
-        <!-- =============================================
-             REGISTER BUTTON
-             ============================================= -->
-
-        <button
-            class="button"
-            type="submit"
-        >
-
-            Create Account
-
-        </button>
-
-
-    </form>
-
-
-    <!-- =================================================
-         LOGIN LINK
-         ================================================= -->
-
-    <p>
-
-        Already have an account?
-
-        <a href="{{ url_for('login') }}">
-
-            Login here
-
-        </a>
-
-    </p>
-
-
-</div>
-
+</section>
 
 {% endblock %}
