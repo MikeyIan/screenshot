@@ -2,127 +2,81 @@
 
 {% block content %}
 
-<!-- =====================================================
-     SCREENSHOT LOGIN PAGE
-     =====================================================
+<section class="auth-page">
 
-     This page allows an existing user to log into
-     their SCREENSHOT account.
+    <div class="auth-card">
 
-     The username and password are sent to the
-     login() function in app.py.
-     ===================================================== -->
+        <div class="auth-icon">
+            🎮
+        </div>
 
+        <p class="auth-label">
+            PLAYER LOGIN
+        </p>
 
-<div class="form-container">
+        <h1>
+            Welcome Back
+        </h1>
 
+        <p class="auth-subtitle">
+            Login to MikeyIan Screen Shot
+        </p>
 
-    <!-- =================================================
-         PAGE TITLE
-         ================================================= -->
+        <form method="POST">
 
-    <h1>Login to SCREENSHOT</h1>
+            <div class="form-group">
+                <label for="username">
+                    Username
+                </label>
 
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                    required
+                >
+            </div>
 
-    <p>
-        Sign in to upload and manage your
-        video game screenshots.
-    </p>
+            <div class="form-group">
+                <label for="password">
+                    Password
+                </label>
 
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
 
-    <!-- =================================================
-         LOGIN FORM
-         ================================================= -->
+            <button
+                type="submit"
+                class="auth-submit"
+            >
+                LOGIN
+            </button>
 
-    <form method="POST">
+        </form>
 
+        <div class="auth-bottom">
 
-        <!-- =============================================
-             USERNAME
-             ============================================= -->
+            <p>
+                New player?
+            </p>
 
-        <label for="username">
+            <a href="{{ url_for('register') }}">
+                Create an account
+            </a>
 
-            Username
+        </div>
 
-        </label>
+    </div>
 
-
-        <!--
-            app.py gets this value with:
-
-            request.form["username"]
-        -->
-
-        <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Enter your username"
-            required
-        >
-
-
-        <!-- =============================================
-             PASSWORD
-             ============================================= -->
-
-        <label for="password">
-
-            Password
-
-        </label>
-
-
-        <!--
-            type="password" hides the password
-            while the user types.
-        -->
-
-        <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            required
-        >
-
-
-        <!-- =============================================
-             LOGIN BUTTON
-             ============================================= -->
-
-        <button
-            class="button"
-            type="submit"
-        >
-
-            Login
-
-        </button>
-
-
-    </form>
-
-
-    <!-- =================================================
-         REGISTER LINK
-         ================================================= -->
-
-    <p>
-
-        Don't have an account?
-
-        <a href="{{ url_for('register') }}">
-
-            Create an account
-
-        </a>
-
-    </p>
-
-
-</div>
-
+</section>
 
 {% endblock %}
