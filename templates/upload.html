@@ -2,59 +2,122 @@
 
 {% block content %}
 
-<div class="upload-container">
+<section class="upload-page">
 
-    <h1>Upload Screenshot</h1>
+    <div class="upload-card">
 
-    <p>Share your favorite gaming screenshot.</p>
+        <div class="upload-header">
 
-    <form
-        method="POST"
-        action="{{ url_for('upload') }}"
-        enctype="multipart/form-data"
-    >
+            <div class="auth-icon">
+                📸
+            </div>
 
-        <div class="form-group">
-            <label for="title">Screenshot Title</label>
+            <p class="auth-label">
+                SHARE YOUR GAME
+            </p>
 
-            <input
-                type="text"
-                id="title"
-                name="title"
-                placeholder="Enter screenshot title"
-                required
+            <h1>
+                Upload Screenshot
+            </h1>
+
+            <p>
+                Share one of your favorite
+                gaming moments with the community.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <div class="form-group">
+
+                <label for="title">
+                    Screenshot Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="Example: Snake begins the mission"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="comment">
+                    Description
+                </label>
+
+                <textarea
+                    id="comment"
+                    name="comment"
+                    rows="5"
+                    placeholder="Tell everyone about this screenshot..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="image">
+                    Screenshot
+                </label>
+
+                <div class="file-upload-box">
+
+                    <div class="file-upload-icon">
+                        🖼️
+                    </div>
+
+                    <p>
+                        Choose your gaming screenshot
+                    </p>
+
+                    <span>
+                        PNG • JPG • JPEG • GIF • WEBP
+                    </span>
+
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept=".png,.jpg,.jpeg,.gif,.webp"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="auth-submit"
             >
-        </div>
+                ⬆ UPLOAD SCREENSHOT
+            </button>
 
-        <div class="form-group">
-            <label for="comment">Comment</label>
+        </form>
 
-            <textarea
-                id="comment"
-                name="comment"
-                placeholder="Tell us about this screenshot..."
-                rows="5"
-            ></textarea>
-        </div>
 
-        <div class="form-group">
-            <label for="image">Choose Screenshot</label>
+        <a
+            href="{{ url_for('index') }}"
+            class="back-gallery"
+        >
+            ← Back to Gallery
+        </a>
 
-            <input
-                type="file"
-                id="image"
-                name="image"
-                accept=".png,.jpg,.jpeg,.gif,.webp"
-                required
-            >
-        </div>
+    </div>
 
-        <button type="submit">
-            Upload Screenshot
-        </button>
-
-    </form>
-
-</div>
+</section>
 
 {% endblock %}
