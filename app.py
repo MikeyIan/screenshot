@@ -1,3 +1,27 @@
+# ============================================================
+# WEEK 3 UPDATE
+# ============================================================
+# New social features added during Week 3:
+#
+#   ❤️ Like reaction
+#   😭 Cry reaction
+#   😊 Smile reaction
+#   💬 User comment system
+#   🗑️ Delete your own comments
+#
+# Reactions and comments are stored in Neon PostgreSQL.
+# Each user can have one reaction per screenshot.
+#
+# Existing features kept:
+#   - Register / Login / Logout
+#   - User profiles
+#   - Screenshot uploads
+#   - Neon Object Storage
+#   - Edit screenshots
+#   - Delete screenshots
+# ============================================================
+
+
 from flask import (
     Flask,
     render_template,
@@ -151,6 +175,10 @@ def init_db():
     db = get_db()
     cursor = db.cursor()
 
+    # --------------------------------------------------------
+    # USERS TABLE
+    # --------------------------------------------------------
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -158,6 +186,10 @@ def init_db():
             password_hash TEXT NOT NULL
         )
     """)
+
+    # --------------------------------------------------------
+    # SCREENSHOTS TABLE
+    # --------------------------------------------------------
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS screenshots (
@@ -184,6 +216,79 @@ def init_db():
     cursor.execute("""
         ALTER TABLE screenshots
         ADD COLUMN IF NOT EXISTS image_url TEXT
+    """)
+
+    # ========================================================
+    # WEEK 3 UPDATE - REACTIONS TABLE
+    # ========================================================
+    #
+    # Stores:
+    #   like
+    #   cry
+    #   smile
+    #
+    # UNIQUE(user_id, screenshot_id) means each user can
+    # only have ONE active reaction on each screenshot.
+    # ========================================================
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS reactions (
+            id SERIAL PRIMARY KEY,
+
+            user_id INTEGER NOT NULL,
+            screenshot_id INTEGER NOT NULL,
+
+            reaction_type TEXT NOT NULL,
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            CONSTRAINT fk_reaction_user
+                FOREIGN KEY (user_id)
+                REFERENCES users(id)
+                ON DELETE CASCADE,
+
+            CONSTRAINT fk_reaction_screenshot
+                FOREIGN KEY (screenshot_id)
+                REFERENCES screenshots(id)
+                ON DELETE CASCADE,
+
+            CONSTRAINT unique_user_reaction
+                UNIQUE (user_id, screenshot_id)
+        )
+    """)
+
+    # ========================================================
+    # WEEK 3 UPDATE - COMMENTS TABLE
+    # ========================================================
+    #
+    # This table is DIFFERENT from screenshots.comment.
+    #
+    # screenshots.comment = description from uploader
+    #
+    # comments.comment_text = replies posted by users
+    # ========================================================
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS comments (
+            id SERIAL PRIMARY KEY,
+
+            user_id INTEGER NOT NULL,
+            screenshot_id INTEGER NOT NULL,
+
+            comment_text TEXT NOT NULL,
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            CONSTRAINT fk_comment_user
+                FOREIGN KEY (user_id)
+                REFERENCES users(id)
+                ON DELETE CASCADE,
+
+            CONSTRAINT fk_comment_screenshot
+                FOREIGN KEY (screenshot_id)
+                REFERENCES screenshots(id)
+                ON DELETE CASCADE
+        )
     """)
 
     db.commit()
@@ -236,6 +341,14 @@ def index():
     db = get_db()
     cursor = db.cursor()
 
+    # ========================================================
+    # WEEK 3 UPDATE
+    #
+    # The subqueries count each reaction independently.
+    # This avoids multiplying counts when comments and
+    # reactions are displayed together.
+    # ========================================================
+
     cursor.execute("""
         SELECT
             screenshots.id,
@@ -245,7 +358,34 @@ def index():
             screenshots.filename,
             screenshots.image_url,
             screenshots.created_at,
-            users.username
+            users.username,
+
+            (
+                SELECT COUNT(*)
+                FROM reactions
+                WHERE reactions.screenshot_id = screenshots.id
+                AND reactions.reaction_type = 'like'
+            ) AS like_count,
+
+            (
+                SELECT COUNT(*)
+                FROM reactions
+                WHERE reactions.screenshot_id = screenshots.id
+                AND reactions.reaction_type = 'cry'
+            ) AS cry_count,
+
+            (
+                SELECT COUNT(*)
+                FROM reactions
+                WHERE reactions.screenshot_id = screenshots.id
+                AND reactions.reaction_type = 'smile'
+            ) AS smile_count,
+
+            (
+                SELECT COUNT(*)
+                FROM comments
+                WHERE comments.screenshot_id = screenshots.id
+            ) AS comment_count
 
         FROM screenshots
 
@@ -257,10 +397,95 @@ def index():
 
     screenshots = cursor.fetchall()
 
+    # ========================================================
+    # WEEK 3 UPDATE - CURRENT USER REACTIONS
+    # ========================================================
+    #
+    # Store the logged-in user's reaction for each screenshot.
+    #
+    # Example:
+    #
+    # {
+    #     1: "like",
+    #     5: "smile"
+    # }
+    #
+    # ========================================================
+
+    user_reactions = {}
+
+    if "user_id" in session:
+
+        cursor.execute("""
+            SELECT
+                screenshot_id,
+                reaction_type
+
+            FROM reactions
+
+            WHERE user_id = %s
+        """, (
+            session["user_id"],
+        ))
+
+        reaction_rows = cursor.fetchall()
+
+        for reaction in reaction_rows:
+
+            user_reactions[
+                reaction["screenshot_id"]
+            ] = reaction["reaction_type"]
+
+    # ========================================================
+    # WEEK 3 UPDATE - LOAD USER COMMENTS
+    # ========================================================
+
+    cursor.execute("""
+        SELECT
+            comments.id,
+            comments.user_id,
+            comments.screenshot_id,
+            comments.comment_text,
+            comments.created_at,
+            users.username
+
+        FROM comments
+
+        JOIN users
+            ON comments.user_id = users.id
+
+        ORDER BY comments.created_at ASC
+    """)
+
+    comment_rows = cursor.fetchall()
+
+    comments_by_screenshot = {}
+
+    for comment in comment_rows:
+
+        screenshot_id = comment[
+            "screenshot_id"
+        ]
+
+        if screenshot_id not in comments_by_screenshot:
+
+            comments_by_screenshot[
+                screenshot_id
+            ] = []
+
+        comments_by_screenshot[
+            screenshot_id
+        ].append(
+            comment
+        )
+
     cursor.close()
     db.close()
 
-    # Generate temporary image URLs.
+    # --------------------------------------------------------
+    # CREATE TEMPORARY IMAGE URLS
+    # --------------------------------------------------------
+
     for screenshot in screenshots:
 
         if screenshot["filename"]:
@@ -271,7 +496,14 @@ def index():
 
     return render_template(
         "index.html",
-        screenshots=screenshots
+
+        screenshots=screenshots,
+
+        # WEEK 3 UPDATE
+        user_reactions=user_reactions,
+
+        # WEEK 3 UPDATE
+        comments_by_screenshot=comments_by_screenshot
     )
 
 
@@ -442,6 +674,7 @@ def logout():
         url_for("index")
     )
 
+
 # ============================================================
 # USER PROFILE
 # ============================================================
@@ -452,12 +685,13 @@ def profile(username):
     db = get_db()
     cursor = db.cursor()
 
-    # Find the user
     cursor.execute("""
         SELECT
             id,
             username
+
         FROM users
+
         WHERE username = %s
     """, (
         username,
@@ -470,13 +704,14 @@ def profile(username):
         cursor.close()
         db.close()
 
-        flash("User not found.")
+        flash(
+            "User not found."
+        )
 
         return redirect(
             url_for("index")
         )
 
-    # Get all screenshots uploaded by this user
     cursor.execute("""
         SELECT
             id,
@@ -486,8 +721,11 @@ def profile(username):
             filename,
             image_url,
             created_at
+
         FROM screenshots
+
         WHERE user_id = %s
+
         ORDER BY created_at DESC
     """, (
         profile_user["id"],
@@ -498,7 +736,6 @@ def profile(username):
     cursor.close()
     db.close()
 
-    # Generate temporary Neon Object Storage URLs
     for screenshot in screenshots:
 
         if screenshot["filename"]:
@@ -512,6 +749,8 @@ def profile(username):
         profile_user=profile_user,
         screenshots=screenshots
     )
+
+
 # ============================================================
 # UPLOAD SCREENSHOT
 # ============================================================
@@ -592,9 +831,9 @@ def upload():
             + extension
         )
 
-        # -----------------------------------------
+        # ----------------------------------------------------
         # UPLOAD IMAGE TO NEON OBJECT STORAGE
-        # -----------------------------------------
+        # ----------------------------------------------------
 
         try:
 
@@ -630,13 +869,11 @@ def upload():
                 url_for("upload")
             )
 
-        # We use temporary signed URLs when
-        # displaying images.
         image_url = None
 
-        # -----------------------------------------
+        # ----------------------------------------------------
         # SAVE SCREENSHOT RECORD
-        # -----------------------------------------
+        # ----------------------------------------------------
 
         db = get_db()
         cursor = db.cursor()
@@ -673,8 +910,6 @@ def upload():
 
             db.rollback()
 
-            # Database failed after image uploaded.
-            # Try to remove orphaned image.
             try:
 
                 storage.delete_object(
@@ -717,6 +952,372 @@ def upload():
 
     return render_template(
         "upload.html"
+    )
+
+
+# ============================================================
+# WEEK 3 UPDATE - REACTION SYSTEM
+# ============================================================
+#
+# Supported reactions:
+#
+# ❤️ like
+# 😭 cry
+# 😊 smile
+#
+# If the user clicks their current reaction again,
+# the reaction is removed.
+#
+# If they select another reaction, their existing
+# reaction is changed.
+# ============================================================
+
+@app.route(
+    "/react/<int:screenshot_id>/<reaction_type>",
+    methods=["POST"]
+)
+def react(screenshot_id, reaction_type):
+
+    if "user_id" not in session:
+
+        flash(
+            "Please login to react to screenshots."
+        )
+
+        return redirect(
+            url_for("login")
+        )
+
+    # WEEK 3 UPDATE:
+    # Only allow our three supported reaction types.
+    allowed_reactions = {
+        "like",
+        "cry",
+        "smile"
+    }
+
+    if reaction_type not in allowed_reactions:
+
+        flash(
+            "Invalid reaction."
+        )
+
+        return redirect(
+            url_for("index")
+        )
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Make sure screenshot exists.
+    cursor.execute("""
+        SELECT id
+        FROM screenshots
+        WHERE id = %s
+    """, (
+        screenshot_id,
+    ))
+
+    screenshot = cursor.fetchone()
+
+    if screenshot is None:
+
+        cursor.close()
+        db.close()
+
+        flash(
+            "Screenshot not found."
+        )
+
+        return redirect(
+            url_for("index")
+        )
+
+    # Find the user's existing reaction.
+    cursor.execute("""
+        SELECT
+            id,
+            reaction_type
+
+        FROM reactions
+
+        WHERE user_id = %s
+        AND screenshot_id = %s
+    """, (
+        session["user_id"],
+        screenshot_id
+    ))
+
+    existing_reaction = cursor.fetchone()
+
+    if existing_reaction:
+
+        # ----------------------------------------------------
+        # WEEK 3 UPDATE
+        #
+        # Clicking the same reaction again removes it.
+        # ----------------------------------------------------
+
+        if (
+            existing_reaction["reaction_type"]
+            == reaction_type
+        ):
+
+            cursor.execute("""
+                DELETE FROM reactions
+
+                WHERE user_id = %s
+                AND screenshot_id = %s
+            """, (
+                session["user_id"],
+                screenshot_id
+            ))
+
+        else:
+
+            # ------------------------------------------------
+            # WEEK 3 UPDATE
+            #
+            # User picked a different reaction.
+            # Change the old reaction to the new one.
+            # ------------------------------------------------
+
+            cursor.execute("""
+                UPDATE reactions
+
+                SET reaction_type = %s
+
+                WHERE user_id = %s
+                AND screenshot_id = %s
+            """, (
+                reaction_type,
+                session["user_id"],
+                screenshot_id
+            ))
+
+    else:
+
+        # ----------------------------------------------------
+        # WEEK 3 UPDATE
+        #
+        # First reaction from this user on this screenshot.
+        # ----------------------------------------------------
+
+        cursor.execute("""
+            INSERT INTO reactions (
+                user_id,
+                screenshot_id,
+                reaction_type
+            )
+
+            VALUES (%s, %s, %s)
+        """, (
+            session["user_id"],
+            screenshot_id,
+            reaction_type
+        ))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return redirect(
+        url_for("index")
+    )
+
+
+# ============================================================
+# WEEK 3 UPDATE - ADD USER COMMENT
+# ============================================================
+#
+# Allows a logged-in user to leave a comment
+# underneath a screenshot.
+# ============================================================
+
+@app.route(
+    "/comment/<int:screenshot_id>",
+    methods=["POST"]
+)
+def add_comment(screenshot_id):
+
+    if "user_id" not in session:
+
+        flash(
+            "Please login to leave a comment."
+        )
+
+        return redirect(
+            url_for("login")
+        )
+
+    comment_text = request.form.get(
+        "comment_text",
+        ""
+    ).strip()
+
+    if not comment_text:
+
+        flash(
+            "Comment cannot be empty."
+        )
+
+        return redirect(
+            url_for("index")
+        )
+
+    # WEEK 3 UPDATE:
+    # Prevent extremely large comments.
+    if len(comment_text) > 500:
+
+        flash(
+            "Comments must be 500 characters or less."
+        )
+
+        return redirect(
+            url_for("index")
+        )
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Make sure screenshot exists.
+    cursor.execute("""
+        SELECT id
+        FROM screenshots
+        WHERE id = %s
+    """, (
+        screenshot_id,
+    ))
+
+    screenshot = cursor.fetchone()
+
+    if screenshot is None:
+
+        cursor.close()
+        db.close()
+
+        flash(
+            "Screenshot not found."
+        )
+
+        return redirect(
+            url_for("index")
+        )
+
+    # WEEK 3 UPDATE:
+    # Save user comment in Neon PostgreSQL.
+    cursor.execute("""
+        INSERT INTO comments (
+            user_id,
+            screenshot_id,
+            comment_text
+        )
+
+        VALUES (%s, %s, %s)
+    """, (
+        session["user_id"],
+        screenshot_id,
+        comment_text
+    ))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    flash(
+        "Comment posted!"
+    )
+
+    return redirect(
+        url_for("index")
+    )
+
+
+# ============================================================
+# WEEK 3 UPDATE - DELETE USER COMMENT
+# ============================================================
+#
+# Users can only delete comments that belong to them.
+# ============================================================
+
+@app.route(
+    "/comment/delete/<int:comment_id>",
+    methods=["POST"]
+)
+def delete_comment(comment_id):
+
+    if "user_id" not in session:
+
+        flash(
+            "Please login first."
+        )
+
+        return redirect(
+            url_for("login")
+        )
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM comments
+        WHERE id = %s
+    """, (
+        comment_id,
+    ))
+
+    comment = cursor.fetchone()
+
+    if comment is None:
+
+        cursor.close()
+        db.close()
+
+        flash(
+            "Comment not found."
+        )
+
+        return redirect(
+            url_for("index")
+        )
+
+    # WEEK 3 UPDATE:
+    # Prevent one user from deleting another
+    # user's comment.
+    if comment["user_id"] != session["user_id"]:
+
+        cursor.close()
+        db.close()
+
+        flash(
+            "You can only delete your own comments."
+        )
+
+        return redirect(
+            url_for("index")
+        )
+
+    cursor.execute("""
+        DELETE FROM comments
+        WHERE id = %s
+    """, (
+        comment_id,
+    ))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    flash(
+        "Comment deleted."
+    )
+
+    return redirect(
+        url_for("index")
     )
 
 
@@ -833,8 +1434,6 @@ def edit(screenshot_id):
             url_for("index")
         )
 
-    # Give edit.html a temporary URL
-    # for the current picture.
     if screenshot["filename"]:
 
         screenshot["image_url"] = create_image_url(
@@ -910,9 +1509,9 @@ def delete(screenshot_id):
             url_for("index")
         )
 
-    # -----------------------------------------
+    # --------------------------------------------------------
     # DELETE IMAGE FROM OBJECT STORAGE
-    # -----------------------------------------
+    # --------------------------------------------------------
 
     if screenshot["filename"]:
 
@@ -933,12 +1532,18 @@ def delete(screenshot_id):
                 error
             )
 
-            # Continue deleting database record
-            # even if storage deletion fails.
+            # Continue deleting database record even
+            # if object storage deletion fails.
 
-    # -----------------------------------------
+    # --------------------------------------------------------
     # DELETE DATABASE RECORD
-    # -----------------------------------------
+    # --------------------------------------------------------
+    #
+    # WEEK 3:
+    # Reactions and user comments are automatically
+    # removed because their foreign keys use
+    # ON DELETE CASCADE.
+    # --------------------------------------------------------
 
     cursor.execute("""
         DELETE FROM screenshots
