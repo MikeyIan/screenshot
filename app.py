@@ -191,9 +191,103 @@ def get_bucket_name():
 
 def create_image_url(filename):
 
+    # ========================================================
+    # WEEK 3 - IMAGE STORAGE DEBUG / FIX
+    # ========================================================
+
     if not filename:
+        print("IMAGE DEBUG: filename is empty")
+        return None
+
+    try:
+
+        endpoint_url = os.environ.get(
+            "AWS_ENDPOINT_URL_S3"
+        )
+
+        access_key = os.environ.get(
+            "AWS_ACCESS_KEY_ID"
+        )
+
+        secret_key = os.environ.get(
+            "AWS_SECRET_ACCESS_KEY"
+        )
+
+        region = os.environ.get(
+            "AWS_REGION",
+            "us-east-1"
+        )
+
+        bucket = os.environ.get(
+            "STORAGE_BUCKET"
+        )
+
+        # Safe debugging.
+        # We DO NOT print the actual credentials.
+        print(
+            "IMAGE DEBUG:",
+            "filename =", filename,
+            "| endpoint =", bool(endpoint_url),
+            "| access_key =", bool(access_key),
+            "| secret_key =", bool(secret_key),
+            "| region =", region,
+            "| bucket =", bucket
+        )
+
+        if not endpoint_url:
+            raise RuntimeError(
+                "AWS_ENDPOINT_URL_S3 is missing"
+            )
+
+        if not access_key:
+            raise RuntimeError(
+                "AWS_ACCESS_KEY_ID is missing"
+            )
+
+        if not secret_key:
+            raise RuntimeError(
+                "AWS_SECRET_ACCESS_KEY is missing"
+            )
+
+        if not bucket:
+            raise RuntimeError(
+                "STORAGE_BUCKET is missing"
+            )
+
+        storage = boto3.client(
+            "s3",
+            endpoint_url=endpoint_url,
+            aws_access_key_id=access_key,
+            aws_secret_access_key=secret_key,
+            region_name=region
+        )
+
+        image_url = storage.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": bucket,
+                "Key": filename
+            },
+            ExpiresIn=3600
+        )
+
+        print(
+            "IMAGE DEBUG: signed URL created for",
+            filename
+        )
+
+        return image_url
+
+    except Exception as error:
+
+        print(
+            "IMAGE URL ERROR:",
+            type(error).__name__,
+            str(error)
+        )
 
         return None
+
 
     try:
 
