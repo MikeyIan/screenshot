@@ -12,23 +12,19 @@
     <div class="hero-glow hero-glow-left"></div>
     <div class="hero-glow hero-glow-right"></div>
 
-
     <div class="hero-content">
 
         <p class="welcome">
             W E L C O M E &nbsp; T O
         </p>
 
-
         <h1 class="mikeyian">
             MikeyIan
         </h1>
 
-
         <h2 class="screen-shot">
             SCREEN SHOT
         </h2>
-
 
         <div class="tagline">
 
@@ -45,12 +41,10 @@
 
         </div>
 
-
         <p class="hero-description">
             A community for gamers to share
             their best gaming moments.
         </p>
-
 
         <div class="hero-buttons">
 
@@ -74,7 +68,6 @@
 
             {% endif %}
 
-
             <a
                 href="#gallery"
                 class="button button-blue"
@@ -87,7 +80,6 @@
     </div>
 
 </section>
-
 
 
 <!-- =========================================
@@ -161,7 +153,6 @@
 </section>
 
 
-
 <!-- =========================================
      SCREENSHOT GALLERY
 ========================================== -->
@@ -190,7 +181,9 @@
                 <article class="screenshot-card">
 
 
-                    <!-- IMAGE -->
+                    <!-- =================================
+                         IMAGE
+                    ================================== -->
 
                     <div class="image-container">
 
@@ -208,8 +201,7 @@
                                 <span>🎮</span>
 
                                 <p>
-                                    Image storage
-                                    being connected
+                                    Image unavailable
                                 </p>
 
                             </div>
@@ -231,14 +223,21 @@
                     </div>
 
 
-                    <!-- SCREENSHOT INFORMATION -->
+                    <!-- =================================
+                         CARD CONTENT
+                    ================================== -->
 
                     <div class="card-content">
+
+
+                        <!-- TITLE -->
 
                         <h3>
                             {{ screenshot.title }}
                         </h3>
 
+
+                        <!-- SCREENSHOT DESCRIPTION -->
 
                         {% if screenshot.comment %}
 
@@ -249,30 +248,284 @@
                         {% endif %}
 
 
-                        <div class="card-bottom">
+                        <!-- =================================
+                             UPLOADED BY
+                        ================================== -->
 
-                          <span class="uploaded-by">
+                        <div class="uploaded-by-section">
 
-    Uploaded by
+                            <span class="uploaded-by">
 
-    <a
-        href="{{ url_for(
-            'profile',
-            username=screenshot.username
-        ) }}"
-        class="profile-link"
-    >
-        {{ screenshot.username }}
-    </a>
+                                Uploaded by
 
-</span>
+                                <a
+                                    href="{{ url_for(
+                                        'profile',
+                                        username=screenshot.username
+                                    ) }}"
+                                    class="profile-link"
+                                >
+                                    {{ screenshot.username }}
+                                </a>
 
-                            {% if
-                                session.get("user_id")
-                                == screenshot.user_id
+                            </span>
+
+                        </div>
+
+
+                        <!-- =================================
+                             REACTIONS
+                        ================================== -->
+
+                        <div class="reaction-section">
+
+                            <div class="reaction-buttons">
+
+
+                                <!-- LIKE -->
+
+                                <form
+                                    action="{{ url_for(
+                                        'react',
+                                        screenshot_id=screenshot.id,
+                                        reaction_type='like'
+                                    ) }}"
+                                    method="POST"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="reaction-button
+                                        {% if user_reactions.get(screenshot.id) == 'like' %}
+                                            active
+                                        {% endif %}
+                                        "
+                                    >
+                                        ❤️ Like
+                                        <span class="reaction-count">
+                                            {{ screenshot.like_count }}
+                                        </span>
+                                    </button>
+
+                                </form>
+
+
+                                <!-- CRY -->
+
+                                <form
+                                    action="{{ url_for(
+                                        'react',
+                                        screenshot_id=screenshot.id,
+                                        reaction_type='cry'
+                                    ) }}"
+                                    method="POST"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="reaction-button
+                                        {% if user_reactions.get(screenshot.id) == 'cry' %}
+                                            active
+                                        {% endif %}
+                                        "
+                                    >
+                                        😭 Cry
+                                        <span class="reaction-count">
+                                            {{ screenshot.cry_count }}
+                                        </span>
+                                    </button>
+
+                                </form>
+
+
+                                <!-- SMILE -->
+
+                                <form
+                                    action="{{ url_for(
+                                        'react',
+                                        screenshot_id=screenshot.id,
+                                        reaction_type='smile'
+                                    ) }}"
+                                    method="POST"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="reaction-button
+                                        {% if user_reactions.get(screenshot.id) == 'smile' %}
+                                            active
+                                        {% endif %}
+                                        "
+                                    >
+                                        😊 Smile
+                                        <span class="reaction-count">
+                                            {{ screenshot.smile_count }}
+                                        </span>
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================
+                             COMMENTS
+                        ================================== -->
+
+                        <div class="comments-section">
+
+                            <h4>
+                                💬 Comments
+                                <span class="comment-count">
+                                    {{ screenshot.comment_count }}
+                                </span>
+                            </h4>
+
+
+                            <!-- EXISTING COMMENTS -->
+
+                            {% set screenshot_comments =
+                                comments_by_screenshot.get(
+                                    screenshot.id,
+                                    []
+                                )
                             %}
 
+
+                            {% if screenshot_comments %}
+
+                                <div class="comment-list">
+
+                                    {% for user_comment in screenshot_comments %}
+
+                                        <div class="user-comment">
+
+                                            <div class="comment-content">
+
+                                                <strong>
+                                                    {{ user_comment.username }}
+                                                </strong>
+
+                                                <p>
+                                                    {{ user_comment.comment_text }}
+                                                </p>
+
+                                            </div>
+
+
+                                            <!-- DELETE OWN COMMENT -->
+
+                                            {% if
+                                                session.get("user_id")
+                                                == user_comment.user_id
+                                            %}
+
+                                                <form
+                                                    action="{{ url_for(
+                                                        'delete_comment',
+                                                        comment_id=user_comment.id
+                                                    ) }}"
+                                                    method="POST"
+                                                    class="delete-comment-form"
+                                                >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="delete-comment-button"
+                                                        onclick="
+                                                            return confirm(
+                                                                'Delete this comment?'
+                                                            )
+                                                        "
+                                                    >
+                                                        Delete
+                                                    </button>
+
+                                                </form>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% else %}
+
+                                <p class="no-comments">
+                                    No comments yet. Be the first to comment!
+                                </p>
+
+                            {% endif %}
+
+
+                            <!-- =================================
+                                 ADD COMMENT
+                            ================================== -->
+
+                            {% if session.get("user_id") %}
+
+                                <form
+                                    action="{{ url_for(
+                                        'add_comment',
+                                        screenshot_id=screenshot.id
+                                    ) }}"
+                                    method="POST"
+                                    class="comment-form"
+                                >
+
+                                    <input
+                                        type="text"
+                                        name="comment_text"
+                                        maxlength="500"
+                                        placeholder="Write a comment..."
+                                        required
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="comment-button"
+                                    >
+                                        Post
+                                    </button>
+
+                                </form>
+
+                            {% else %}
+
+                                <p class="login-to-comment">
+
+                                    <a href="{{ url_for('login') }}">
+                                        Log in
+                                    </a>
+
+                                    to react or leave a comment.
+
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- =================================
+                             OWNER CONTROLS
+                        ================================== -->
+
+                        {% if
+                            session.get("user_id")
+                            == screenshot.user_id
+                        %}
+
+                            <div class="card-bottom">
+
                                 <div class="card-actions">
+
+
+                                    <!-- EDIT -->
 
                                     <a
                                         href="{{ url_for(
@@ -284,6 +537,8 @@
                                         Edit
                                     </a>
 
+
+                                    <!-- DELETE SCREENSHOT -->
 
                                     <form
                                         action="{{ url_for(
@@ -309,9 +564,10 @@
 
                                 </div>
 
-                            {% endif %}
+                            </div>
 
-                        </div>
+                        {% endif %}
+
 
                     </div>
 
@@ -366,7 +622,6 @@
             {% endif %}
 
         </div>
-
 
     {% endif %}
 
