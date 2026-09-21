@@ -267,18 +267,76 @@
 
                         <div class="social-section">
 
-                            <div class="reaction-section">
+                          <div class="reaction-section">
 
-                                {% if session.get("user_id") %}
+    {% if session.get("user_id") %}
 
-                                    <form
-                                        action="{{ url_for(
-                                            'react',
-                                            screenshot_id=screenshot.id
-                                        ) }}"
-                                        method="POST"
-                                        class="reaction-form"
-                                    >
+        <div class="reaction-form">
+
+            <!-- LIKE -->
+            <form
+                action="{{ url_for(
+                    'react',
+                    screenshot_id=screenshot.id,
+                    reaction_type='like'
+                ) }}"
+                method="POST"
+            >
+                <button
+                    type="submit"
+                    class="reaction-button"
+                >
+                    ❤️ Like
+                </button>
+            </form>
+
+
+            <!-- CRY -->
+            <form
+                action="{{ url_for(
+                    'react',
+                    screenshot_id=screenshot.id,
+                    reaction_type='cry'
+                ) }}"
+                method="POST"
+            >
+                <button
+                    type="submit"
+                    class="reaction-button"
+                >
+                    😭 Cry
+                </button>
+            </form>
+
+
+            <!-- SMILE -->
+            <form
+                action="{{ url_for(
+                    'react',
+                    screenshot_id=screenshot.id,
+                    reaction_type='smile'
+                ) }}"
+                method="POST"
+            >
+                <button
+                    type="submit"
+                    class="reaction-button"
+                >
+                    😊 Smile
+                </button>
+            </form>
+
+        </div>
+
+    {% else %}
+
+        <p class="login-to-react">
+            Log in to react.
+        </p>
+
+    {% endif %}
+
+</div>
 
                                         <button
                                             type="submit"
