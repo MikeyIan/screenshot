@@ -12,26 +12,21 @@
     <div class="hero-glow hero-glow-left"></div>
     <div class="hero-glow hero-glow-right"></div>
 
-
     <div class="hero-content">
 
         <p class="welcome">
             W E L C O M E &nbsp; T O
         </p>
 
-
         <h1 class="mikeyian">
             MikeyIan
         </h1>
-
 
         <h2 class="screen-shot">
             SCREEN SHOT
         </h2>
 
-
         <div class="tagline">
-
             <span>CAPTURE</span>
             <b>•</b>
 
@@ -42,15 +37,12 @@
             <b>•</b>
 
             <span>REPEAT</span>
-
         </div>
-
 
         <p class="hero-description">
             A community for gamers to share
             their best gaming moments.
         </p>
-
 
         <div class="hero-buttons">
 
@@ -74,7 +66,6 @@
 
             {% endif %}
 
-
             <a
                 href="#gallery"
                 class="button button-blue"
@@ -87,7 +78,6 @@
     </div>
 
 </section>
-
 
 
 <!-- =========================================
@@ -103,7 +93,6 @@
         </div>
 
         <div>
-
             <strong>
                 {{ screenshots|length }}
             </strong>
@@ -111,7 +100,6 @@
             <span>
                 Screenshots
             </span>
-
         </div>
 
     </div>
@@ -124,7 +112,6 @@
         </div>
 
         <div>
-
             <strong>
                 MikeyIan
             </strong>
@@ -132,7 +119,6 @@
             <span>
                 Gaming Community
             </span>
-
         </div>
 
     </div>
@@ -145,7 +131,6 @@
         </div>
 
         <div>
-
             <strong>
                 Good Times
             </strong>
@@ -153,13 +138,11 @@
             <span>
                 Play • Share • Repeat
             </span>
-
         </div>
 
     </div>
 
 </section>
-
 
 
 <!-- =========================================
@@ -190,7 +173,9 @@
                 <article class="screenshot-card">
 
 
-                    <!-- IMAGE -->
+                    <!-- =========================
+                         IMAGE
+                    ========================== -->
 
                     <div class="image-container">
 
@@ -231,7 +216,9 @@
                     </div>
 
 
-                    <!-- SCREENSHOT INFORMATION -->
+                    <!-- =========================
+                         SCREENSHOT INFORMATION
+                    ========================== -->
 
                     <div class="card-content">
 
@@ -249,23 +236,209 @@
                         {% endif %}
 
 
+                        <!-- =====================
+                             UPLOADED BY
+                        ====================== -->
+
+                        <div class="uploaded-by-section">
+
+                            <span class="uploaded-by">
+
+                                Uploaded by
+
+                                <a
+                                    href="{{ url_for(
+                                        'profile',
+                                        username=screenshot.username
+                                    ) }}"
+                                    class="profile-link"
+                                >
+                                    {{ screenshot.username }}
+                                </a>
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- =====================
+                             REACTIONS
+                        ====================== -->
+
+                        <div class="social-section">
+
+                            <div class="reaction-section">
+
+                                {% if session.get("user_id") %}
+
+                                    <form
+                                        action="{{ url_for(
+                                            'react',
+                                            screenshot_id=screenshot.id
+                                        ) }}"
+                                        method="POST"
+                                        class="reaction-form"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            name="reaction"
+                                            value="like"
+                                            class="reaction-button"
+                                        >
+                                            ❤️ Like
+                                        </button>
+
+                                        <button
+                                            type="submit"
+                                            name="reaction"
+                                            value="fire"
+                                            class="reaction-button"
+                                        >
+                                            🔥 Fire
+                                        </button>
+
+                                        <button
+                                            type="submit"
+                                            name="reaction"
+                                            value="gg"
+                                            class="reaction-button"
+                                        >
+                                            🎮 GG
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    <p class="login-to-react">
+                                        Log in to react.
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- =====================
+                                 COMMENTS
+                            ====================== -->
+
+                            <div class="comments-section">
+
+                                <h4>
+                                    💬 Comments
+                                </h4>
+
+
+                                {% if screenshot.comments %}
+
+                                    <div class="comment-list">
+
+                                        {% for comment in screenshot.comments %}
+
+                                            <div class="user-comment">
+
+                                                <div class="comment-text">
+
+                                                    <strong>
+                                                        {{ comment.username }}
+                                                    </strong>
+
+                                                    <span>
+                                                        {{ comment.comment }}
+                                                    </span>
+
+                                                </div>
+
+
+                                                {% if
+                                                    session.get("user_id")
+                                                    == comment.user_id
+                                                %}
+
+                                                    <form
+                                                        action="{{ url_for(
+                                                            'delete_comment',
+                                                            comment_id=comment.id
+                                                        ) }}"
+                                                        method="POST"
+                                                    >
+
+                                                        <button
+                                                            type="submit"
+                                                            class="delete-comment-button"
+                                                        >
+                                                            Delete
+                                                        </button>
+
+                                                    </form>
+
+                                                {% endif %}
+
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                {% else %}
+
+                                    <p class="no-comments">
+                                        No comments yet.
+                                    </p>
+
+                                {% endif %}
+
+
+                                <!-- COMMENT FORM -->
+
+                                {% if session.get("user_id") %}
+
+                                    <form
+                                        action="{{ url_for(
+                                            'add_comment',
+                                            screenshot_id=screenshot.id
+                                        ) }}"
+                                        method="POST"
+                                        class="comment-form"
+                                    >
+
+                                        <input
+                                            type="text"
+                                            name="comment"
+                                            placeholder="Write a comment..."
+                                            maxlength="500"
+                                            required
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="comment-button"
+                                        >
+                                            Post
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    <p class="login-to-comment">
+                                        Log in to leave a comment.
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================
+                             OWNER ACTIONS
+                        ====================== -->
+
                         <div class="card-bottom">
-
-                          <span class="uploaded-by">
-
-    Uploaded by
-
-    <a
-        href="{{ url_for(
-            'profile',
-            username=screenshot.username
-        ) }}"
-        class="profile-link"
-    >
-        {{ screenshot.username }}
-    </a>
-
-</span>
 
                             {% if
                                 session.get("user_id")
@@ -366,7 +539,6 @@
             {% endif %}
 
         </div>
-
 
     {% endif %}
 
