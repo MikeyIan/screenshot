@@ -189,10 +189,16 @@
 
                         {% if screenshot.image_url %}
 
-                            <img
-                                src="{{ screenshot.image_url }}"
-                                alt="{{ screenshot.title }}"
-                            >
+                           <a href="{{ url_for('view_screenshot', screenshot_id=screenshot.id) }}"
+   class="screenshot-view-link"
+   title="View {{ screenshot.title }}">
+
+    <img
+        src="{{ screenshot.image_url }}"
+        alt="{{ screenshot.title }}"
+    >
+
+</a>
 
                         {% elif screenshot.filename %}
 

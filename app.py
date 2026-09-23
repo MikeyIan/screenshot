@@ -644,7 +644,145 @@ def index():
         comments_by_screenshot=comments_by_screenshot
     )
 
+# ============================================================
+# WEEK 4 UPDATE - SCREENSHOT VIEWING MODE
+# ============================================================
 
+@app.route("/view/<int:screenshot_id>")
+def view_screenshot(screenshot_id):
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # --------------------------------------------------------
+    # LOAD SCREENSHOT AND REACTION COUNTS
+    # --------------------------------------------------------
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.user_id,
+            screenshots.title,
+            screenshots.comment,
+            screenshots.filename,
+            screenshots.image_url,
+            screenshots.created_at,
+            users.username,
+
+            (
+                SELECT COUNT(*)
+                FROM reactions
+                WHERE reactions.screenshot_id = screenshots.id
+                AND reactions.reaction_type = 'like'
+            ) AS like_count,
+
+            (
+                SELECT COUNT(*)
+                FROM reactions
+                WHERE reactions.screenshot_id = screenshots.id
+                AND reactions.reaction_type = 'cry'
+            ) AS cry_count,
+
+            (
+                SELECT COUNT(*)
+                FROM reactions
+                WHERE reactions.screenshot_id = screenshots.id
+                AND reactions.reaction_type = 'smile'
+            ) AS smile_count
+
+        FROM screenshots
+
+        JOIN users
+            ON screenshots.user_id = users.id
+
+        WHERE screenshots.id = %s
+    """, (
+        screenshot_id,
+    ))
+
+    screenshot = cursor.fetchone()
+
+    # Screenshot does not exist
+    if screenshot is None:
+
+        cursor.close()
+        db.close()
+
+        flash("Screenshot not found.")
+
+        return redirect(
+            url_for("index")
+        )
+
+    # --------------------------------------------------------
+    # CREATE TEMPORARY IMAGE URL
+    # --------------------------------------------------------
+
+    if screenshot["filename"]:
+
+        screenshot["image_url"] = create_image_url(
+            screenshot["filename"]
+        )
+
+    # --------------------------------------------------------
+    # FIND CURRENT USER'S REACTION
+    # --------------------------------------------------------
+
+    user_reaction = None
+
+    if "user_id" in session:
+
+        cursor.execute("""
+            SELECT reaction_type
+            FROM reactions
+
+            WHERE user_id = %s
+            AND screenshot_id = %s
+        """, (
+            session["user_id"],
+            screenshot_id
+        ))
+
+        reaction = cursor.fetchone()
+
+        if reaction:
+            user_reaction = reaction["reaction_type"]
+
+    # --------------------------------------------------------
+    # LOAD COMMENTS
+    # --------------------------------------------------------
+
+    cursor.execute("""
+        SELECT
+            comments.id,
+            comments.user_id,
+            comments.comment_text,
+            comments.created_at,
+            users.username
+
+        FROM comments
+
+        JOIN users
+            ON comments.user_id = users.id
+
+        WHERE comments.screenshot_id = %s
+
+        ORDER BY comments.created_at ASC
+    """, (
+        screenshot_id,
+    ))
+
+    comments = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "view.html",
+        screenshot=screenshot,
+        user_reaction=user_reaction,
+        comments=comments
+    )
 # ============================================================
 # REGISTER
 # ============================================================

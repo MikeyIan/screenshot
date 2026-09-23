@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="view-page">
+
+    <!-- BACK TO GALLERY -->
+    <div class="view-back">
+        <a href="{{ url_for('index') }}#gallery"
+           class="view-back-button">
+            ← Back to Gallery
+        </a>
+    </div>
+
+
+    <!-- LARGE SCREENSHOT -->
+    <div class="view-image-container">
+
+        {% if screenshot.image_url %}
+
+            <img
+                src="{{ screenshot.image_url }}"
+                alt="{{ screenshot.title }}"
+                class="view-large-image"
+            >
+
+        {% else %}
+
+            <div class="view-image-error">
+                Image unavailable
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- SCREENSHOT INFORMATION -->
+    <div class="view-info">
+
+        <h1>{{ screenshot.title }}</h1>
+
+        <p class="view-user">
+            Uploaded by
+
+            <a href="{{ url_for(
+                'profile',
+                username=screenshot.username
+            ) }}">
+                @{{ screenshot.username }}
+            </a>
+        </p>
+
+
+        {% if screenshot.comment %}
+
+            <p class="view-description">
+                {{ screenshot.comment }}
+            </p>
+
+        {% endif %}
+
+
+        <!-- REACTIONS -->
+        <div class="view-reactions">
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'react',
+                    screenshot_id=screenshot.id,
+                    reaction_type='like'
+                ) }}"
+            >
+                <button
+                    type="submit"
+                    class="reaction-button
+                    {% if user_reaction == 'like' %}
+                        active-reaction
+                    {% endif %}"
+                >
+                    ❤️ Like {{ screenshot.like_count }}
+                </button>
+            </form>
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'react',
+                    screenshot_id=screenshot.id,
+                    reaction_type='cry'
+                ) }}"
+            >
+                <button
+                    type="submit"
+                    class="reaction-button
+                    {% if user_reaction == 'cry' %}
+                        active-reaction
+                    {% endif %}"
+                >
+                    😭 Cry {{ screenshot.cry_count }}
+                </button>
+            </form>
+
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'react',
+                    screenshot_id=screenshot.id,
+                    reaction_type='smile'
+                ) }}"
+            >
+                <button
+                    type="submit"
+                    class="reaction-button
+                    {% if user_reaction == 'smile' %}
+                        active-reaction
+                    {% endif %}"
+                >
+                    😊 Smile {{ screenshot.smile_count }}
+                </button>
+            </form>
+
+        </div>
+
+
+        <!-- COMMENTS -->
+        <div class="view-comments">
+
+            <h2>💬 Comments</h2>
+
+
+            {% if comments %}
+
+                {% for user_comment in comments %}
+
+                    <div class="view-comment">
+
+                        <div class="view-comment-text">
+
+                            <a href="{{ url_for(
+                                'profile',
+                                username=user_comment.username
+                            ) }}">
+                                <strong>
+                                    @{{ user_comment.username }}
+                                </strong>
+                            </a>
+
+                            <p>
+                                {{ user_comment.comment_text }}
+                            </p>
+
+                        </div>
+
+
+                        {% if session.get('user_id')
+                              == user_comment.user_id %}
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'delete_comment',
+                                    comment_id=user_comment.id
+                                ) }}"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="delete-comment-button"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p class="no-comments">
+                    No comments yet. Be the first to comment!
+                </p>
+
+            {% endif %}
+
+
+            <!-- ADD COMMENT -->
+
+            {% if session.get('user_id') %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'add_comment',
+                        screenshot_id=screenshot.id
+                    ) }}"
+                    class="view-comment-form"
+                >
+
+                    <textarea
+                        name="comment_text"
+                        maxlength="500"
+                        placeholder="Write a comment..."
+                        required
+                    ></textarea>
+
+                    <button type="submit">
+                        Post Comment
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <p>
+                    <a href="{{ url_for('login') }}">
+                        Login
+                    </a>
+                    to leave a comment or reaction.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- OWNER CONTROLS -->
+
+        {% if session.get('user_id') == screenshot.user_id %}
+
+            <div class="view-owner-controls">
+
+                <a
+                    href="{{ url_for(
+                        'edit',
+                        screenshot_id=screenshot.id
+                    ) }}"
+                    class="edit-button"
+                >
+                    ✏️ Edit Screenshot
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
