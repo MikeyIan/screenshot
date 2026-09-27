@@ -870,6 +870,65 @@ def api_screenshots():
         "count": len(results),
         "screenshots": results
     }
+
+# ============================================================
+# WEEK 6 UPDATE - INDIVIDUAL SCREENSHOT API
+# ============================================================
+#
+# Returns one screenshot from Neon PostgreSQL using its ID.
+#
+# Example:
+# /api/screenshots/5
+# ============================================================
+
+@app.route("/api/screenshots/<int:screenshot_id>")
+def api_screenshot(screenshot_id):
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.user_id,
+            screenshots.title,
+            screenshots.comment,
+            screenshots.created_at,
+            screenshots.views,
+            users.username
+
+        FROM screenshots
+
+        JOIN users
+            ON screenshots.user_id = users.id
+
+        WHERE screenshots.id = %s
+    """, (
+        screenshot_id,
+    ))
+
+    screenshot = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    if screenshot is None:
+        return {
+            "error": "Screenshot not found"
+        }, 404
+
+    return {
+        "id": screenshot["id"],
+        "user_id": screenshot["user_id"],
+        "username": screenshot["username"],
+        "title": screenshot["title"],
+        "comment": screenshot["comment"],
+        "views": screenshot["views"],
+        "created_at": (
+            screenshot["created_at"].isoformat()
+            if screenshot["created_at"] else None
+        )
+    }
     # ============================================================
 # REGISTER
 # ============================================================
