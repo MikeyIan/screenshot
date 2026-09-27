@@ -52,7 +52,7 @@
         </p>
 <!-- WEEK 5 UPDATE - SCREENSHOT VIEW COUNT -->
 <p class="view-count">
-    👁 {{ screenshot.views }} Views
+    👁 {{ screenshot.views }} View{% if screenshot.views != 1 %}s{% endif %}
 </p>
 
         {% if screenshot.comment %}
