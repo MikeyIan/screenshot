@@ -1028,7 +1028,174 @@ def api_users():
         "count": len(results),
         "users": results
     }
-    
+
+# ============================================================
+# WEEK 7 UPDATE - DATABASE STATISTICS API
+# ============================================================
+#
+# Returns live statistics from Neon PostgreSQL.
+#
+# Example:
+# /api/stats
+#
+# ============================================================
+
+@app.route("/api/stats")
+def api_stats():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Count registered users
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM users
+    """)
+    total_users = cursor.fetchone()["total"]
+
+    # Count uploaded screenshots
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM screenshots
+    """)
+    total_screenshots = cursor.fetchone()["total"]
+
+    # Count comments
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM comments
+    """)
+    total_comments = cursor.fetchone()["total"]
+
+    # Count reactions
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM reactions
+    """)
+    total_reactions = cursor.fetchone()["total"]
+
+    # Add all screenshot views together
+    cursor.execute("""
+        SELECT COALESCE(SUM(views), 0) AS total
+        FROM screenshots
+    """)
+    total_views = cursor.fetchone()["total"]
+
+    cursor.close()
+    db.close()
+
+    return {
+        "users": total_users,
+        "screenshots": total_screenshots,
+        "comments": total_comments,
+        "reactions": total_reactions,
+        "total_views": total_views
+    }
+
+# =========================================================
+# WEEK 7 UPDATE - RECENT ACTIVITY API
+# =========================================================
+#
+# Returns recent screenshot activity from Neon PostgreSQL.
+#
+# Example:
+# /api/activity
+# =========================================================
+
+@app.route("/api/activity")
+def api_activity():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.title,
+            screenshots.comment,
+            screenshots.views,
+            screenshots.created_at,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        ORDER BY screenshots.created_at DESC
+        LIMIT 10
+    """)
+
+    activity = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for item in activity:
+        results.append({
+            "screenshot_id": item["id"],
+            "username": item["username"],
+            "title": item["title"],
+            "comment": item["comment"],
+            "views": item["views"],
+            "created_at": (
+                item["created_at"].isoformat()
+                if item["created_at"] else None
+            )
+        })
+
+    return {
+        "count": len(results),
+        "activity": results
+    }
+
+# ============================================================
+# WEEK 7 UPDATE - TOP SCREENSHOTS API
+# ============================================================
+#
+# Returns screenshots ranked by number of views.
+#
+# Example:
+# /api/top-screenshots
+# ============================================================
+
+@app.route("/api/top-screenshots")
+def api_top_screenshots():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.title,
+            screenshots.views,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        ORDER BY screenshots.views DESC
+        LIMIT 10
+    """)
+
+    screenshots = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for item in screenshots:
+        results.append({
+            "screenshot_id": item["id"],
+            "title": item["title"],
+            "username": item["username"],
+            "views": item["views"]
+        })
+
+    return {
+        "count": len(results),
+        "top_screenshots": results
+    }
 # ============================================================
 # REGISTER
 # ============================================================
