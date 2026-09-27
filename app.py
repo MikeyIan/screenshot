@@ -809,10 +809,229 @@ def view_screenshot(screenshot_id):
         user_reaction=user_reaction,
         comments=comments
     )
+
+# ============================================================
+# WEEK 6 UPDATE - SCREENSHOT API
+# ============================================================
+#
+# Returns screenshot information from Neon PostgreSQL
+# as JSON data.
+#
+# Example:
+# /api/screenshots
+#
+# ============================================================
+
+@app.route("/api/screenshots")
+def api_screenshots():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.user_id,
+            screenshots.title,
+            screenshots.comment,
+            screenshots.created_at,
+            screenshots.views,
+            users.username
+
+        FROM screenshots
+
+        JOIN users
+            ON screenshots.user_id = users.id
+
+        ORDER BY screenshots.created_at DESC
+    """)
+
+    screenshots = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for screenshot in screenshots:
+
+        results.append({
+            "id": screenshot["id"],
+            "user_id": screenshot["user_id"],
+            "username": screenshot["username"],
+            "title": screenshot["title"],
+            "comment": screenshot["comment"],
+            "views": screenshot["views"],
+            "created_at": screenshot["created_at"].isoformat()
+                if screenshot["created_at"] else None
+        })
+
+    return {
+        "count": len(results),
+        "screenshots": results
+    }
+
+# ============================================================
+# WEEK 6 UPDATE - INDIVIDUAL SCREENSHOT API
+# ============================================================
+#
+# Returns one screenshot from Neon PostgreSQL using its ID.
+#
+# Example:
+# /api/screenshots/5
+# ============================================================
+
+@app.route("/api/screenshots/<int:screenshot_id>")
+def api_screenshot(screenshot_id):
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.user_id,
+            screenshots.title,
+            screenshots.comment,
+            screenshots.created_at,
+            screenshots.views,
+            users.username
+
+        FROM screenshots
+
+        JOIN users
+            ON screenshots.user_id = users.id
+
+        WHERE screenshots.id = %s
+    """, (
+        screenshot_id,
+    ))
+
+    screenshot = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    if screenshot is None:
+        return {
+            "error": "Screenshot not found"
+        }, 404
+
+    return {
+        "id": screenshot["id"],
+        "user_id": screenshot["user_id"],
+        "username": screenshot["username"],
+        "title": screenshot["title"],
+        "comment": screenshot["comment"],
+        "views": screenshot["views"],
+        "created_at": (
+            screenshot["created_at"].isoformat()
+            if screenshot["created_at"] else None
+        )
+    }
+# =========================================================
+# WEEK 6 UPDATE - USER SCREENSHOTS API
+# =========================================================
+#
+# Returns all screenshots uploaded by a specific username.
+#
+# Example:
+# /api/users/goku/screenshots
+# =========================================================
+
+@app.route("/api/users/<username>/screenshots")
+def api_user_screenshots(username):
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.user_id,
+            screenshots.title,
+            screenshots.comment,
+            screenshots.created_at,
+            screenshots.views,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        WHERE users.username = %s
+        ORDER BY screenshots.created_at DESC
+    """, (username,))
+
+    screenshots = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for screenshot in screenshots:
+        results.append({
+            "id": screenshot["id"],
+            "user_id": screenshot["user_id"],
+            "username": screenshot["username"],
+            "title": screenshot["title"],
+            "comment": screenshot["comment"],
+            "views": screenshot["views"],
+            "created_at": (
+                screenshot["created_at"].isoformat()
+                if screenshot["created_at"] else None
+            )
+        })
+
+    return {
+        "username": username,
+        "count": len(results),
+        "screenshots": results
+    } 
+    # ============================================================
+# WEEK 6 UPDATE - USERS API
+# ============================================================
+#
+# Returns registered users from Neon PostgreSQL as JSON data.
+#
+# Example:
+# /api/users
+# ============================================================
+
+@app.route("/api/users")
+def api_users():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            id,
+            username
+        FROM users
+        ORDER BY username
+    """)
+
+    users = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for user in users:
+        results.append({
+            "id": user["id"],
+            "username": user["username"]
+        })
+
+    return {
+        "count": len(results),
+        "users": results
+    }
+    
 # ============================================================
 # REGISTER
 # ============================================================
-
 @app.route(
     "/register",
     methods=["GET", "POST"]
