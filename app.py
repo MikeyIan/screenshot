@@ -1028,7 +1028,69 @@ def api_users():
         "count": len(results),
         "users": results
     }
-    
+
+# ============================================================
+# WEEK 7 UPDATE - DATABASE STATISTICS API
+# ============================================================
+#
+# Returns live statistics from Neon PostgreSQL.
+#
+# Example:
+# /api/stats
+#
+# ============================================================
+
+@app.route("/api/stats")
+def api_stats():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Count registered users
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM users
+    """)
+    total_users = cursor.fetchone()["total"]
+
+    # Count uploaded screenshots
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM screenshots
+    """)
+    total_screenshots = cursor.fetchone()["total"]
+
+    # Count comments
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM comments
+    """)
+    total_comments = cursor.fetchone()["total"]
+
+    # Count reactions
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM reactions
+    """)
+    total_reactions = cursor.fetchone()["total"]
+
+    # Add all screenshot views together
+    cursor.execute("""
+        SELECT COALESCE(SUM(views), 0) AS total
+        FROM screenshots
+    """)
+    total_views = cursor.fetchone()["total"]
+
+    cursor.close()
+    db.close()
+
+    return {
+        "users": total_users,
+        "screenshots": total_screenshots,
+        "comments": total_comments,
+        "reactions": total_reactions,
+        "total_views": total_views
+    }
 # ============================================================
 # REGISTER
 # ============================================================
