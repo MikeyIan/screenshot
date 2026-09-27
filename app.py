@@ -1147,6 +1147,55 @@ def api_activity():
         "count": len(results),
         "activity": results
     }
+
+# ============================================================
+# WEEK 7 UPDATE - TOP SCREENSHOTS API
+# ============================================================
+#
+# Returns screenshots ranked by number of views.
+#
+# Example:
+# /api/top-screenshots
+# ============================================================
+
+@app.route("/api/top-screenshots")
+def api_top_screenshots():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.title,
+            screenshots.views,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        ORDER BY screenshots.views DESC
+        LIMIT 10
+    """)
+
+    screenshots = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for item in screenshots:
+        results.append({
+            "screenshot_id": item["id"],
+            "title": item["title"],
+            "username": item["username"],
+            "views": item["views"]
+        })
+
+    return {
+        "count": len(results),
+        "top_screenshots": results
+    }
 # ============================================================
 # REGISTER
 # ============================================================
