@@ -929,7 +929,65 @@ def api_screenshot(screenshot_id):
             if screenshot["created_at"] else None
         )
     }
-    # ============================================================
+# =========================================================
+# WEEK 6 UPDATE - USER SCREENSHOTS API
+# =========================================================
+#
+# Returns all screenshots uploaded by a specific username.
+#
+# Example:
+# /api/users/goku/screenshots
+# =========================================================
+
+@app.route("/api/users/<username>/screenshots")
+def api_user_screenshots(username):
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.user_id,
+            screenshots.title,
+            screenshots.comment,
+            screenshots.created_at,
+            screenshots.views,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        WHERE users.username = %s
+        ORDER BY screenshots.created_at DESC
+    """, (username,))
+
+    screenshots = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for screenshot in screenshots:
+        results.append({
+            "id": screenshot["id"],
+            "user_id": screenshot["user_id"],
+            "username": screenshot["username"],
+            "title": screenshot["title"],
+            "comment": screenshot["comment"],
+            "views": screenshot["views"],
+            "created_at": (
+                screenshot["created_at"].isoformat()
+                if screenshot["created_at"] else None
+            )
+        })
+
+    return {
+        "username": username,
+        "count": len(results),
+        "screenshots": results
+    }    
+# ============================================================
 # REGISTER
 # ============================================================
 @app.route(
