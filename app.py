@@ -1091,6 +1091,62 @@ def api_stats():
         "reactions": total_reactions,
         "total_views": total_views
     }
+
+# =========================================================
+# WEEK 7 UPDATE - RECENT ACTIVITY API
+# =========================================================
+#
+# Returns recent screenshot activity from Neon PostgreSQL.
+#
+# Example:
+# /api/activity
+# =========================================================
+
+@app.route("/api/activity")
+def api_activity():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.title,
+            screenshots.comment,
+            screenshots.views,
+            screenshots.created_at,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        ORDER BY screenshots.created_at DESC
+        LIMIT 10
+    """)
+
+    activity = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for item in activity:
+        results.append({
+            "screenshot_id": item["id"],
+            "username": item["username"],
+            "title": item["title"],
+            "comment": item["comment"],
+            "views": item["views"],
+            "created_at": (
+                item["created_at"].isoformat()
+                if item["created_at"] else None
+            )
+        })
+
+    return {
+        "count": len(results),
+        "activity": results
+    }
 # ============================================================
 # REGISTER
 # ============================================================
