@@ -809,10 +809,70 @@ def view_screenshot(screenshot_id):
         user_reaction=user_reaction,
         comments=comments
     )
+
 # ============================================================
-# REGISTER
+# WEEK 6 UPDATE - SCREENSHOT API
+# ============================================================
+#
+# Returns screenshot information from Neon PostgreSQL
+# as JSON data.
+#
+# Example:
+# /api/screenshots
+#
 # ============================================================
 
+@app.route("/api/screenshots")
+def api_screenshots():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.user_id,
+            screenshots.title,
+            screenshots.comment,
+            screenshots.created_at,
+            screenshots.views,
+            users.username
+
+        FROM screenshots
+
+        JOIN users
+            ON screenshots.user_id = users.id
+
+        ORDER BY screenshots.created_at DESC
+    """)
+
+    screenshots = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for screenshot in screenshots:
+
+        results.append({
+            "id": screenshot["id"],
+            "user_id": screenshot["user_id"],
+            "username": screenshot["username"],
+            "title": screenshot["title"],
+            "comment": screenshot["comment"],
+            "views": screenshot["views"],
+            "created_at": screenshot["created_at"].isoformat()
+                if screenshot["created_at"] else None
+        })
+
+    return {
+        "count": len(results),
+        "screenshots": results
+    }
+    # ============================================================
+# REGISTER
+# ============================================================
 @app.route(
     "/register",
     methods=["GET", "POST"]
