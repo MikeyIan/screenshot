@@ -986,7 +986,49 @@ def api_user_screenshots(username):
         "username": username,
         "count": len(results),
         "screenshots": results
-    }    
+    } 
+    # ============================================================
+# WEEK 6 UPDATE - USERS API
+# ============================================================
+#
+# Returns registered users from Neon PostgreSQL as JSON data.
+#
+# Example:
+# /api/users
+# ============================================================
+
+@app.route("/api/users")
+def api_users():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        SELECT
+            id,
+            username
+        FROM users
+        ORDER BY username
+    """)
+
+    users = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    results = []
+
+    for user in users:
+        results.append({
+            "id": user["id"],
+            "username": user["username"]
+        })
+
+    return {
+        "count": len(results),
+        "users": results
+    }
+    
 # ============================================================
 # REGISTER
 # ============================================================
