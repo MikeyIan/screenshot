@@ -356,7 +356,19 @@ def init_db():
                 ON DELETE CASCADE
         )
     """)
+    # ========================================================
+    # WEEK 5 UPDATE - SCREENSHOT VIEW COUNTER
+    # ========================================================
+    #
+    # Stores the number of times a screenshot has been opened
+    # in the individual screenshot viewing page.
+    #
+    # ========================================================
 
+    cursor.execute("""
+        ALTER TABLE screenshots
+        ADD COLUMN IF NOT EXISTS views INTEGER DEFAULT 0
+    """)
     # Make sure older databases also have these columns.
 
     cursor.execute("""
@@ -652,7 +664,20 @@ def index():
 def view_screenshot(screenshot_id):
 
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor()    
+    # ========================================================
+    # WEEK 5 UPDATE - INCREASE SCREENSHOT VIEW COUNT
+    # ========================================================
+
+    cursor.execute("""
+        UPDATE screenshots
+        SET views = COALESCE(views, 0) + 1
+        WHERE id = %s
+    """, (
+        screenshot_id,
+    ))
+
+    db.commit()
 
     # --------------------------------------------------------
     # LOAD SCREENSHOT AND REACTION COUNTS
@@ -667,6 +692,7 @@ def view_screenshot(screenshot_id):
             screenshots.filename,
             screenshots.image_url,
             screenshots.created_at,
+            screenshots.views,
             users.username,
 
             (
