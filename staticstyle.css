@@ -52,7 +52,7 @@ body {
 
     border-bottom: 1px solid #253047;
 
-    position: sticky;
+    position: relative;
     top: 0;
 
     z-index: 100;
@@ -1469,7 +1469,7 @@ footer span {
     width: 92%;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 160px 0 100px;
+    padding: 60px 0 100px;
 }
 
 
