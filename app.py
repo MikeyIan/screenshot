@@ -1377,11 +1377,11 @@ def admin_dashboard():
 
     screenshots = cursor.fetchall()
 
-    # Create image URLs for admin dashboard
-   for screenshot in screenshots:
-    screenshot["image_url"] = create_image_url(
-        screenshot["filename"]
-    )
+      # Create image URLs for admin dashboard
+    for screenshot in screenshots:
+        screenshot["image_url"] = create_image_url(
+            screenshot["filename"]
+        )
 
     cursor.close()
     db.close()
