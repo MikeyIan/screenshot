@@ -1,1 +1,151 @@
+{% extends "base.html" %}
 
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <div class="admin-header">
+        <h1>🛡️ SCREEN SHOT ADMIN CONTROL PANEL</h1>
+
+        <p>
+            Logged in as:
+            <strong>{{ session.get("admin_username") }}</strong>
+        </p>
+
+        <a href="{{ url_for('admin_logout') }}">
+            🚪 Admin Logout
+        </a>
+    </div>
+
+    <hr>
+
+    <!-- ================================================== -->
+    <!-- WEBSITE STATISTICS -->
+    <!-- ================================================== -->
+
+    <h2>📊 Website Overview</h2>
+
+    <div class="admin-stats">
+
+        <p>
+            👤 Registered Accounts:
+            <strong>{{ users|length }}</strong>
+        </p>
+
+        <p>
+            🖼️ Uploaded Screenshots:
+            <strong>{{ screenshots|length }}</strong>
+        </p>
+
+    </div>
+
+    <hr>
+
+    <!-- ================================================== -->
+    <!-- USER MANAGEMENT -->
+    <!-- ================================================== -->
+
+    <h2>👥 User Account Management</h2>
+
+    {% if users %}
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Management</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for user in users %}
+
+                    <tr>
+
+                        <td>
+                            {{ user.id }}
+                        </td>
+
+                        <td>
+                            {{ user.username }}
+                        </td>
+
+                        <td>
+                            Delete controls coming next
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    {% else %}
+
+        <p>No registered accounts found.</p>
+
+    {% endif %}
+
+    <hr>
+
+    <!-- ================================================== -->
+    <!-- SCREENSHOT MANAGEMENT -->
+    <!-- ================================================== -->
+
+    <h2>🖼️ Screenshot Management</h2>
+
+    {% if screenshots %}
+
+        {% for screenshot in screenshots %}
+
+            <div class="admin-screenshot">
+
+                <img
+                    src="{{ screenshot.image_url }}"
+                    alt="{{ screenshot.title }}"
+                    style="max-width: 300px;"
+                >
+
+                <h3>
+                    {{ screenshot.title }}
+                </h3>
+
+                <p>
+                    <strong>Screenshot ID:</strong>
+                    {{ screenshot.id }}
+                </p>
+
+                <p>
+                    <strong>Uploaded by:</strong>
+                    {{ screenshot.username }}
+                </p>
+
+                <p>
+                    <strong>Views:</strong>
+                    {{ screenshot.views }}
+                </p>
+
+                <p>
+                    Delete controls coming next
+                </p>
+
+            </div>
+
+            <hr>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No screenshots have been uploaded.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
