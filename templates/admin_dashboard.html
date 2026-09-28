@@ -130,9 +130,17 @@
                     {{ screenshot.views }}
                 </p>
 
-                <p>
-                    Delete controls coming next
-                </p>
+                
+                    <form
+    method="POST"
+    action="{{ url_for('admin_delete_screenshot', screenshot_id=screenshot.id) }}"
+    onsubmit="return confirm('Are you sure you want to delete this screenshot? This cannot be undone.');"
+>
+    <button type="submit">
+        🗑️ Delete Screenshot
+    </button>
+</form>
+                
 
             </div>
 
