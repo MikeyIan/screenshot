@@ -1447,6 +1447,86 @@ def admin_delete_screenshot(screenshot_id):
     flash("Screenshot deleted by administrator.")
 
     return redirect(url_for("admin_dashboard"))
+
+# ============================================================
+# WEEK 8 UPDATE - ADMIN DELETE USER
+# ============================================================
+
+@app.route("/admin/delete-user/<int:user_id>", methods=["POST"])
+def admin_delete_user(user_id):
+
+    # Only administrators can use this route
+    if not session.get("is_admin"):
+        flash("Administrator access required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    # Make sure the user exists
+    cursor.execute("""
+        SELECT id, username
+        FROM users
+        WHERE id = %s
+    """, (user_id,))
+
+    user = cursor.fetchone()
+
+    if not user:
+        cursor.close()
+        db.close()
+
+        flash("User account not found.")
+        return redirect(url_for("admin_dashboard"))
+
+    # Find the user's screenshots so their stored images
+    # can also be removed from Neon Object Storage
+    cursor.execute("""
+        SELECT filename
+        FROM screenshots
+        WHERE user_id = %s
+    """, (user_id,))
+
+    screenshots = cursor.fetchall()
+
+    # Delete images from object storage
+    for screenshot in screenshots:
+
+        if screenshot["filename"]:
+
+            try:
+                storage = get_storage_client()
+                bucket = get_bucket_name()
+
+                storage.delete_object(
+                    Bucket=bucket,
+                    Key=screenshot["filename"]
+                )
+
+            except Exception as error:
+                print(
+                    "ADMIN USER IMAGE DELETE ERROR:",
+                    error
+                )
+
+    # Delete the user.
+    # ON DELETE CASCADE removes their screenshots,
+    # comments, and reactions from PostgreSQL.
+    cursor.execute("""
+        DELETE FROM users
+        WHERE id = %s
+    """, (user_id,))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    flash(
+        "User account and related content deleted by administrator."
+    )
+
+    return redirect(url_for("admin_dashboard"))
     # ============================================================
 # WEEK 8 UPDATE - ADMIN LOGOUT
 # ============================================================
