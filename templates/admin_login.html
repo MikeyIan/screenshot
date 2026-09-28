@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>🛡️ ADMIN LOGIN</h1>
+
+        <p>
+            MikeyIan SCREEN SHOT Administration
+        </p>
+
+        <hr>
+
+        <form method="POST">
+
+            <label for="username">
+                Administrator Username
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter admin username"
+                required
+                autocomplete="username"
+            >
+
+            <label for="password">
+                Administrator Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter admin password"
+                required
+                autocomplete="current-password"
+            >
+
+            <button type="submit">
+                🔐 Login as Administrator
+            </button>
+
+        </form>
+
+        <hr>
+
+        <p>
+            <a href="{{ url_for('index') }}">
+                ← Return to SCREEN SHOT
+            </a>
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

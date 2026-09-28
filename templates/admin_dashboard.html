@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <!-- WEEK 8 - ADMIN CONTROL PANEL -->
+
+    <div class="admin-header">
+        <h1>🛡️ SCREEN SHOT ADMIN CONTROL PANEL</h1>
+
+        <p class="admin-welcome">
+            Welcome,
+            <strong>{{ session.get("admin_username") }}</strong>
+        </p>
+    </div>
+
+
+    <!-- ADMIN NAVIGATION -->
+
+    <div class="admin-nav">
+
+        <a href="{{ url_for('admin_dashboard') }}"
+           class="admin-nav-button">
+            🏠 Dashboard
+        </a>
+
+        <a href="{{ url_for('admin_users') }}"
+           class="admin-nav-button">
+            👥 Manage Users
+        </a>
+
+        <a href="{{ url_for('admin_screenshots') }}"
+           class="admin-nav-button">
+            🖼️ Manage Screenshots
+        </a>
+
+        <a href="{{ url_for('admin_logout') }}"
+           class="admin-nav-button admin-logout-button">
+            🚪 Logout
+        </a>
+
+    </div>
+
+
+    <!-- WEBSITE OVERVIEW -->
+
+    <div class="admin-section">
+
+        <h2>📊 Website Overview</h2>
+
+        <div class="admin-stat-grid">
+
+            <div class="admin-stat-card">
+                <h3>👥 Registered Users</h3>
+
+                <div class="admin-stat-number">
+                    {{ users|length }}
+                </div>
+
+                <p>
+                    Accounts currently registered
+                    with SCREEN SHOT.
+                </p>
+
+                <a href="{{ url_for('admin_users') }}">
+                    Manage Users →
+                </a>
+            </div>
+
+
+            <div class="admin-stat-card">
+                <h3>🖼️ Screenshots</h3>
+
+                <div class="admin-stat-number">
+                    {{ screenshots|length }}
+                </div>
+
+                <p>
+                    Screenshots currently stored
+                    on SCREEN SHOT.
+                </p>
+
+                <a href="{{ url_for('admin_screenshots') }}">
+                    Manage Screenshots →
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ADMIN INFORMATION -->
+
+    <div class="admin-section">
+
+        <h2>⚙️ Administration</h2>
+
+        <p>
+            Use the management pages above to control
+            registered accounts and uploaded screenshots.
+        </p>
+
+        <p>
+            User and screenshot deletion requires
+            administrator access and confirmation.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <!-- WEEK 8 - SCREENSHOT MANAGEMENT -->
+
+    <div class="admin-header">
+
+        <h1>🖼️ SCREENSHOT MANAGEMENT</h1>
+
+        <p>
+            Logged in as:
+            <strong>{{ session.get("admin_username") }}</strong>
+        </p>
+
+    </div>
+
+
+    <!-- ADMIN NAVIGATION -->
+
+    <div class="admin-nav">
+
+        <a href="{{ url_for('admin_dashboard') }}"
+           class="admin-nav-button">
+            🏠 Dashboard
+        </a>
+
+        <a href="{{ url_for('admin_users') }}"
+           class="admin-nav-button">
+            👥 Manage Users
+        </a>
+
+        <a href="{{ url_for('admin_screenshots') }}"
+           class="admin-nav-button">
+            🖼️ Manage Screenshots
+        </a>
+
+        <a href="{{ url_for('admin_logout') }}"
+           class="admin-nav-button admin-logout-button">
+            🚪 Logout
+        </a>
+
+    </div>
+
+
+    <!-- SCREENSHOT MANAGEMENT -->
+
+    <div class="admin-section">
+
+        <h2>Uploaded Screenshots</h2>
+
+        <p>
+            Total Uploaded Screenshots:
+            <strong>{{ screenshots|length }}</strong>
+        </p>
+
+
+        {% if screenshots %}
+
+        <div class="admin-screenshot-grid">
+
+            {% for screenshot in screenshots %}
+
+            <div class="admin-screenshot-card">
+
+                <img
+                    src="{{ screenshot.image_url }}"
+                    alt="{{ screenshot.title }}"
+                    class="admin-screenshot-image"
+                >
+
+                <h3>
+                    {{ screenshot.title }}
+                </h3>
+
+                <p>
+                    <strong>Screenshot ID:</strong>
+                    {{ screenshot.id }}
+                </p>
+
+                <p>
+                    <strong>Uploaded by:</strong>
+                    {{ screenshot.username }}
+                </p>
+
+                <p>
+                    <strong>Views:</strong>
+                    {{ screenshot.views }}
+                </p>
+
+                <form
+                    method="POST"
+                    action="{{ url_for('admin_delete_screenshot', screenshot_id=screenshot.id) }}"
+                    onsubmit="return confirm('Are you sure you want to delete this screenshot? This cannot be undone.');"
+                >
+
+                    <button
+                        type="submit"
+                        class="admin-delete-button"
+                    >
+                        🗑️ Delete Screenshot
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+            <p>No screenshots have been uploaded.</p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

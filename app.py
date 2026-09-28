@@ -64,6 +64,17 @@ app.secret_key = os.environ.get(
     "screenshot-secret-key-change-this"
 )
 
+# ============================================================
+# WEEK 8 UPDATE - ADMIN CONFIGURATION
+# ============================================================
+
+ADMIN_USERNAME = os.environ.get(
+    "ADMIN_USERNAME"
+)
+
+ADMIN_PASSWORD_HASH = os.environ.get(
+    "ADMIN_PASSWORD_HASH"
+)
 
 # ============================================================
 # ALLOWED IMAGE TYPES
@@ -1281,6 +1292,334 @@ def register():
     )
 
 
+# ============================================================
+# WEEK 8 UPDATE - ADMIN LOGIN
+# ============================================================
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+
+    # If admin is already logged in, go to dashboard
+    if session.get("is_admin"):
+        return redirect(url_for("admin_dashboard"))
+
+    if request.method == "POST":
+
+        username = request.form["username"].strip()
+        password = request.form["password"]
+
+        # Make sure admin environment variables exist
+        if not ADMIN_USERNAME or not ADMIN_PASSWORD_HASH:
+            flash("Admin login is not configured.")
+            return render_template("admin_login.html")
+
+        # Check admin username and hashed password
+        if (
+            username == ADMIN_USERNAME
+            and check_password_hash(ADMIN_PASSWORD_HASH, password)
+        ):
+            session.clear()
+            session["is_admin"] = True
+            session["admin_username"] = ADMIN_USERNAME
+
+            flash("Admin login successful.")
+
+            return redirect(url_for("admin_dashboard"))
+
+        flash("Invalid administrator username or password.")
+
+    return render_template("admin_login.html")
+
+
+# ============================================================
+# WEEK 8 UPDATE - ADMIN DASHBOARD
+# ============================================================
+
+@app.route("/admin")
+def admin_dashboard():
+
+    # Only allow administrator access
+    if not session.get("is_admin"):
+        flash("Administrator login required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+
+    cursor = db.cursor(
+        cursor_factory=RealDictCursor
+    )
+
+    # Get all registered users
+    cursor.execute("""
+        SELECT
+            id,
+            username
+        FROM users
+        ORDER BY username ASC
+    """)
+
+    users = cursor.fetchall()
+
+    # Get all screenshots and their owners
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.title,
+            screenshots.filename,
+            screenshots.views,
+            screenshots.created_at,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        ORDER BY screenshots.created_at DESC
+    """)
+
+    screenshots = cursor.fetchall()
+
+      # Create image URLs for admin dashboard
+    for screenshot in screenshots:
+        screenshot["image_url"] = create_image_url(
+            screenshot["filename"]
+        )
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "admin_dashboard.html",
+        users=users,
+        screenshots=screenshots
+    )
+
+# ============================================================
+# WEEK 8 UPDATE - ADMIN USER MANAGEMENT PAGE
+# ============================================================
+
+@app.route("/admin/users")
+def admin_users():
+
+    # Only allow administrator access
+    if not session.get("is_admin"):
+        flash("Administrator login required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    # Get all registered users
+    cursor.execute("""
+        SELECT
+            id,
+            username
+        FROM users
+        ORDER BY username ASC
+    """)
+
+    users = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "admin_users.html",
+        users=users
+    )
+
+# ============================================================
+# WEEK 8 UPDATE - ADMIN SCREENSHOT MANAGEMENT PAGE
+# ============================================================
+
+@app.route("/admin/screenshots")
+def admin_screenshots():
+
+    # Only allow administrator access
+    if not session.get("is_admin"):
+        flash("Administrator login required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    # Get all screenshots and their owners
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.title,
+            screenshots.filename,
+            screenshots.views,
+            screenshots.created_at,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        ORDER BY screenshots.created_at DESC
+    """)
+
+    screenshots = cursor.fetchall()
+
+    # Create image URLs
+    for screenshot in screenshots:
+        screenshot["image_url"] = create_image_url(
+            screenshot["filename"]
+        )
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "admin_screenshots.html",
+        screenshots=screenshots
+    )
+# ============================================================
+# WEEK 8 UPDATE — ADMIN DELETE SCREENSHOT
+# ============================================================
+
+@app.route("/admin/delete-screenshot/<int:screenshot_id>", methods=["POST"])
+def admin_delete_screenshot(screenshot_id):
+
+    # Only administrators can use this route
+    if not session.get("is_admin"):
+        flash("Administrator access required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    # Find the screenshot first
+    cursor.execute("""
+        SELECT id, filename
+        FROM screenshots
+        WHERE id = %s
+    """, (screenshot_id,))
+
+    screenshot = cursor.fetchone()
+
+    if not screenshot:
+        cursor.close()
+        db.close()
+        flash("Screenshot not found.")
+        return redirect(url_for("admin_dashboard"))
+
+    # Delete related comments
+    cursor.execute("""
+        DELETE FROM comments
+        WHERE screenshot_id = %s
+    """, (screenshot_id,))
+
+    # Delete related reactions
+    cursor.execute("""
+        DELETE FROM reactions
+        WHERE screenshot_id = %s
+    """, (screenshot_id,))
+
+    # Delete screenshot database record
+    cursor.execute("""
+        DELETE FROM screenshots
+        WHERE id = %s
+    """, (screenshot_id,))
+
+    db.commit()
+    cursor.close()
+    db.close()
+
+    flash("Screenshot deleted by administrator.")
+
+    return redirect(url_for("admin_dashboard"))
+
+# ============================================================
+# WEEK 8 UPDATE - ADMIN DELETE USER
+# ============================================================
+
+@app.route("/admin/delete-user/<int:user_id>", methods=["POST"])
+def admin_delete_user(user_id):
+
+    # Only administrators can use this route
+    if not session.get("is_admin"):
+        flash("Administrator access required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    # Make sure the user exists
+    cursor.execute("""
+        SELECT id, username
+        FROM users
+        WHERE id = %s
+    """, (user_id,))
+
+    user = cursor.fetchone()
+
+    if not user:
+        cursor.close()
+        db.close()
+
+        flash("User account not found.")
+        return redirect(url_for("admin_dashboard"))
+
+    # Find the user's screenshots so their stored images
+    # can also be removed from Neon Object Storage
+    cursor.execute("""
+        SELECT filename
+        FROM screenshots
+        WHERE user_id = %s
+    """, (user_id,))
+
+    screenshots = cursor.fetchall()
+
+    # Delete images from object storage
+    for screenshot in screenshots:
+
+        if screenshot["filename"]:
+
+            try:
+                storage = get_storage_client()
+                bucket = get_bucket_name()
+
+                storage.delete_object(
+                    Bucket=bucket,
+                    Key=screenshot["filename"]
+                )
+
+            except Exception as error:
+                print(
+                    "ADMIN USER IMAGE DELETE ERROR:",
+                    error
+                )
+
+    # Delete the user.
+    # ON DELETE CASCADE removes their screenshots,
+    # comments, and reactions from PostgreSQL.
+    cursor.execute("""
+        DELETE FROM users
+        WHERE id = %s
+    """, (user_id,))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    flash(
+        "User account and related content deleted by administrator."
+    )
+
+    return redirect(url_for("admin_dashboard"))
+    # ============================================================
+# WEEK 8 UPDATE - ADMIN LOGOUT
+# ============================================================
+
+@app.route("/admin/logout")
+def admin_logout():
+
+    session.clear()
+
+    flash("Administrator logged out successfully.")
+
+    return redirect(
+        url_for("admin_login")
+    )
 # ============================================================
 # LOGIN
 # ============================================================
