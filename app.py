@@ -1379,9 +1379,9 @@ def admin_dashboard():
 
     # Create image URLs for admin dashboard
     for screenshot in screenshots:
-        screenshot["image_url"] = get_image_url(
-            screenshot["filename"]
-        )
+    screenshot["image_url"] = create_image_url(
+        screenshot["filename"]
+    )
 
     cursor.close()
     db.close()
