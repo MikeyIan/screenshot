@@ -64,6 +64,17 @@ app.secret_key = os.environ.get(
     "screenshot-secret-key-change-this"
 )
 
+# ============================================================
+# WEEK 8 UPDATE - ADMIN CONFIGURATION
+# ============================================================
+
+ADMIN_USERNAME = os.environ.get(
+    "ADMIN_USERNAME"
+)
+
+ADMIN_PASSWORD_HASH = os.environ.get(
+    "ADMIN_PASSWORD_HASH"
+)
 
 # ============================================================
 # ALLOWED IMAGE TYPES
