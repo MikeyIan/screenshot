@@ -1393,6 +1393,39 @@ def admin_dashboard():
     )
 
 # ============================================================
+# WEEK 8 UPDATE - ADMIN USER MANAGEMENT PAGE
+# ============================================================
+
+@app.route("/admin/users")
+def admin_users():
+
+    # Only allow administrator access
+    if not session.get("is_admin"):
+        flash("Administrator login required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    # Get all registered users
+    cursor.execute("""
+        SELECT
+            id,
+            username
+        FROM users
+        ORDER BY username ASC
+    """)
+
+    users = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "admin_users.html",
+        users=users
+    )
+# ============================================================
 # WEEK 8 UPDATE — ADMIN DELETE SCREENSHOT
 # ============================================================
 
