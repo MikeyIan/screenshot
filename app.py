@@ -1391,6 +1391,62 @@ def admin_dashboard():
         users=users,
         screenshots=screenshots
     )
+
+# ============================================================
+# WEEK 8 UPDATE — ADMIN DELETE SCREENSHOT
+# ============================================================
+
+@app.route("/admin/delete-screenshot/<int:screenshot_id>", methods=["POST"])
+def admin_delete_screenshot(screenshot_id):
+
+    # Only administrators can use this route
+    if not session.get("is_admin"):
+        flash("Administrator access required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    # Find the screenshot first
+    cursor.execute("""
+        SELECT id, filename
+        FROM screenshots
+        WHERE id = %s
+    """, (screenshot_id,))
+
+    screenshot = cursor.fetchone()
+
+    if not screenshot:
+        cursor.close()
+        db.close()
+        flash("Screenshot not found.")
+        return redirect(url_for("admin_dashboard"))
+
+    # Delete related comments
+    cursor.execute("""
+        DELETE FROM comments
+        WHERE screenshot_id = %s
+    """, (screenshot_id,))
+
+    # Delete related reactions
+    cursor.execute("""
+        DELETE FROM reactions
+        WHERE screenshot_id = %s
+    """, (screenshot_id,))
+
+    # Delete screenshot database record
+    cursor.execute("""
+        DELETE FROM screenshots
+        WHERE id = %s
+    """, (screenshot_id,))
+
+    db.commit()
+    cursor.close()
+    db.close()
+
+    flash("Screenshot deleted by administrator.")
+
+    return redirect(url_for("admin_dashboard"))
     # ============================================================
 # WEEK 8 UPDATE - ADMIN LOGOUT
 # ============================================================
