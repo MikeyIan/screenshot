@@ -1293,6 +1293,119 @@ def register():
 
 
 # ============================================================
+# WEEK 8 UPDATE - ADMIN LOGIN
+# ============================================================
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+
+    # If admin is already logged in, go to dashboard
+    if session.get("is_admin"):
+        return redirect(url_for("admin_dashboard"))
+
+    if request.method == "POST":
+
+        username = request.form["username"].strip()
+        password = request.form["password"]
+
+        # Make sure admin environment variables exist
+        if not ADMIN_USERNAME or not ADMIN_PASSWORD_HASH:
+            flash("Admin login is not configured.")
+            return render_template("admin_login.html")
+
+        # Check admin username and hashed password
+        if (
+            username == ADMIN_USERNAME
+            and check_password_hash(ADMIN_PASSWORD_HASH, password)
+        ):
+            session.clear()
+            session["is_admin"] = True
+            session["admin_username"] = ADMIN_USERNAME
+
+            flash("Admin login successful.")
+
+            return redirect(url_for("admin_dashboard"))
+
+        flash("Invalid administrator username or password.")
+
+    return render_template("admin_login.html")
+
+
+# ============================================================
+# WEEK 8 UPDATE - ADMIN DASHBOARD
+# ============================================================
+
+@app.route("/admin")
+def admin_dashboard():
+
+    # Only allow administrator access
+    if not session.get("is_admin"):
+        flash("Administrator login required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+
+    cursor = db.cursor(
+        cursor_factory=RealDictCursor
+    )
+
+    # Get all registered users
+    cursor.execute("""
+        SELECT
+            id,
+            username
+        FROM users
+        ORDER BY username ASC
+    """)
+
+    users = cursor.fetchall()
+
+    # Get all screenshots and their owners
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.title,
+            screenshots.filename,
+            screenshots.views,
+            screenshots.created_at,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        ORDER BY screenshots.created_at DESC
+    """)
+
+    screenshots = cursor.fetchall()
+
+    # Create image URLs for admin dashboard
+    for screenshot in screenshots:
+        screenshot["image_url"] = get_image_url(
+            screenshot["filename"]
+        )
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "admin_dashboard.html",
+        users=users,
+        screenshots=screenshots
+    )
+    # ============================================================
+# WEEK 8 UPDATE - ADMIN LOGOUT
+# ============================================================
+
+@app.route("/admin/logout")
+def admin_logout():
+
+    session.clear()
+
+    flash("Administrator logged out successfully.")
+
+    return redirect(
+        url_for("admin_login")
+    )
+# ============================================================
 # LOGIN
 # ============================================================
 
