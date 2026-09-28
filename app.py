@@ -1425,6 +1425,52 @@ def admin_users():
         "admin_users.html",
         users=users
     )
+
+# ============================================================
+# WEEK 8 UPDATE - ADMIN SCREENSHOT MANAGEMENT PAGE
+# ============================================================
+
+@app.route("/admin/screenshots")
+def admin_screenshots():
+
+    # Only allow administrator access
+    if not session.get("is_admin"):
+        flash("Administrator login required.")
+        return redirect(url_for("admin_login"))
+
+    db = get_db()
+    cursor = db.cursor(cursor_factory=RealDictCursor)
+
+    # Get all screenshots and their owners
+    cursor.execute("""
+        SELECT
+            screenshots.id,
+            screenshots.title,
+            screenshots.filename,
+            screenshots.views,
+            screenshots.created_at,
+            users.username
+        FROM screenshots
+        JOIN users
+            ON screenshots.user_id = users.id
+        ORDER BY screenshots.created_at DESC
+    """)
+
+    screenshots = cursor.fetchall()
+
+    # Create image URLs
+    for screenshot in screenshots:
+        screenshot["image_url"] = create_image_url(
+            screenshot["filename"]
+        )
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "admin_screenshots.html",
+        screenshots=screenshots
+    )
 # ============================================================
 # WEEK 8 UPDATE — ADMIN DELETE SCREENSHOT
 # ============================================================
