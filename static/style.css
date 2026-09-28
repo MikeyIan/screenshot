@@ -1460,3 +1460,453 @@ footer span {
     text-shadow:
         0 0 8px #ff00ff;
 }
+
+/* =========================================================
+   WEEK 8 - ADMIN CONTROL PANEL
+========================================================= */
+
+.admin-dashboard {
+    width: 92%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 0 100px;
+}
+
+
+/* ADMIN HEADER */
+
+.admin-header {
+    text-align: center;
+
+    padding: 40px 25px;
+    margin-bottom: 30px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(142, 45, 226, 0.18),
+            transparent 65%
+        );
+
+    border: 1px solid #313d57;
+    border-radius: 18px;
+
+    box-shadow:
+        0 0 30px rgba(183, 60, 255, 0.12);
+}
+
+
+.admin-header h1 {
+    color: #31e8ff;
+
+    font-size: 38px;
+
+    margin-bottom: 12px;
+
+    text-shadow:
+        0 0 10px #00d9ff,
+        0 0 20px rgba(0, 217, 255, 0.4);
+}
+
+
+.admin-header p {
+    color: #9ca8bc;
+}
+
+
+.admin-header strong {
+    color: #ff63fa;
+
+    text-shadow:
+        0 0 8px rgba(255, 0, 255, 0.6);
+}
+
+
+/* ADMIN NAVIGATION */
+
+.admin-nav {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 40px;
+}
+
+
+.admin-nav-button {
+    display: block;
+
+    padding: 16px 20px;
+
+    text-align: center;
+    text-decoration: none;
+
+    color: #31e8ff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #08101f,
+            #030711
+        );
+
+    border: 1px solid #20dfff;
+    border-radius: 10px;
+
+    font-weight: bold;
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        border-color 0.2s;
+}
+
+
+.admin-nav-button:hover {
+    color: #ffffff;
+
+    transform: translateY(-3px);
+
+    border-color: #ff63fa;
+
+    box-shadow:
+        0 0 20px rgba(217, 70, 239, 0.4);
+}
+
+
+.admin-logout-button {
+    color: #ff7a9c;
+
+    border-color: #ff4f7b;
+}
+
+
+/* ADMIN SECTIONS */
+
+.admin-section {
+    margin-bottom: 35px;
+
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(9, 16, 31, 0.98),
+            rgba(3, 7, 17, 0.98)
+        );
+
+    border: 1px solid #29364e;
+    border-radius: 15px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.35);
+}
+
+
+.admin-section h2 {
+    color: #ff63fa;
+
+    margin-bottom: 20px;
+
+    text-shadow:
+        0 0 10px rgba(255, 0, 255, 0.5);
+}
+
+
+.admin-section > p {
+    color: #9ca8bc;
+
+    line-height: 1.6;
+
+    margin-bottom: 15px;
+}
+
+
+/* DASHBOARD STAT CARDS */
+
+.admin-stat-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 25px;
+}
+
+
+.admin-stat-card {
+    padding: 30px;
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(0, 217, 255, 0.08),
+            #050a14 70%
+        );
+
+    border: 1px solid #263a55;
+    border-radius: 14px;
+
+    text-align: center;
+}
+
+
+.admin-stat-card h3 {
+    color: #ffffff;
+
+    margin-bottom: 20px;
+}
+
+
+.admin-stat-number {
+    color: #31e8ff;
+
+    font-size: 50px;
+    font-weight: bold;
+
+    margin-bottom: 15px;
+
+    text-shadow:
+        0 0 12px #00d9ff;
+}
+
+
+.admin-stat-card p {
+    color: #8f9bb0;
+
+    margin-bottom: 20px;
+}
+
+
+.admin-stat-card a {
+    color: #ff63fa;
+
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+.admin-stat-card a:hover {
+    color: #31e8ff;
+
+    text-shadow:
+        0 0 8px #00d9ff;
+}
+
+
+/* USER MANAGEMENT TABLE */
+
+.admin-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 25px;
+
+    overflow: hidden;
+}
+
+
+.admin-table th {
+    padding: 16px;
+
+    text-align: left;
+
+    color: #31e8ff;
+
+    background: #07101e;
+
+    border-bottom: 1px solid #20dfff;
+}
+
+
+.admin-table td {
+    padding: 16px;
+
+    color: #dce4ef;
+
+    border-bottom: 1px solid #202b40;
+}
+
+
+.admin-table tr:hover td {
+    background:
+        rgba(0, 217, 255, 0.04);
+}
+
+
+/* ADMIN DELETE BUTTON */
+
+.admin-delete-button {
+    padding: 11px 18px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            90deg,
+            #8e2045,
+            #d9467b
+        );
+
+    border: 1px solid #ff5b83;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 12px rgba(255, 91, 131, 0.2);
+}
+
+
+.admin-delete-button:hover {
+    box-shadow:
+        0 0 22px rgba(255, 91, 131, 0.55);
+
+    transform: translateY(-2px);
+}
+
+
+/* SCREENSHOT MANAGEMENT */
+
+.admin-screenshot-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(280px, 1fr));
+
+    gap: 25px;
+
+    margin-top: 25px;
+}
+
+
+.admin-screenshot-card {
+    overflow: hidden;
+
+    padding-bottom: 25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #08101f,
+            #030711
+        );
+
+    border: 1px solid #27344c;
+    border-radius: 14px;
+
+    transition:
+        transform 0.25s,
+        box-shadow 0.25s,
+        border-color 0.25s;
+}
+
+
+.admin-screenshot-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #b93cff;
+
+    box-shadow:
+        0 0 25px rgba(185, 60, 255, 0.25);
+}
+
+
+.admin-screenshot-image {
+    width: 100%;
+    height: 220px;
+
+    object-fit: cover;
+
+    display: block;
+
+    margin-bottom: 20px;
+
+    background: #050915;
+}
+
+
+.admin-screenshot-card h3,
+.admin-screenshot-card p,
+.admin-screenshot-card form {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+
+.admin-screenshot-card h3 {
+    color: #31e8ff;
+
+    margin-bottom: 15px;
+
+    text-shadow:
+        0 0 8px rgba(0, 217, 255, 0.4);
+}
+
+
+.admin-screenshot-card p {
+    color: #9ca8bc;
+
+    margin-bottom: 10px;
+}
+
+
+.admin-screenshot-card strong {
+    color: #ffffff;
+}
+
+
+.admin-screenshot-card form {
+    margin-top: 20px;
+}
+
+
+/* ADMIN MOBILE */
+
+@media (max-width: 800px) {
+
+    .admin-nav {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .admin-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .admin-table {
+        font-size: 13px;
+    }
+
+
+    .admin-table th,
+    .admin-table td {
+        padding: 10px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .admin-nav {
+        grid-template-columns: 1fr;
+    }
+
+
+    .admin-header h1 {
+        font-size: 28px;
+    }
+
+
+    .admin-section {
+        padding: 20px;
+    }
+
+}
