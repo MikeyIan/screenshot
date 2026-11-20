@@ -59,6 +59,15 @@
                 Home
             </a>
 
+<!-- ==========================================
+     FINAL PEER REVIEW UPDATE - STEP 12
+     Show About Page to All Users
+     ========================================== -->
+
+<a href="{{ url_for('about') }}">
+    About
+</a>
+
 
             <!-- Logged In User -->
             {% if session.get("user_id") %}
@@ -96,9 +105,7 @@
      Add About Link to Navigation Bar
      ========================================== -->
 
-<a href="{{ url_for('about') }}">
-    About
-</a>
+
 
                 <a href="{{ url_for('login') }}">
                     Login
