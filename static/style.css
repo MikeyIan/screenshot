@@ -2291,3 +2291,132 @@ footer span {
         padding: 12px;
     }
 }
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 9
+   ABOUT PAGE NEON STYLING
+   ========================================== */
+
+/* Main About page container */
+.about-page {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 30px 24px;
+    color: #ffffff;
+}
+
+/* Center the introduction */
+.about-page .about-hero {
+    text-align: center;
+    padding: 50px 25px;
+    margin-bottom: 35px;
+    background: linear-gradient(
+        135deg,
+        #11152d,
+        #180b29,
+        #071b29
+    );
+    border: 1px solid #263754;
+    border-radius: 18px;
+}
+
+/* Neon heading */
+.about-page h1 {
+    color: #ff42e6;
+    font-size: clamp(30px, 5vw, 48px);
+    margin-bottom: 15px;
+    text-shadow: 0 0 18px #a020a0;
+}
+
+/* Subtitle */
+.about-page .about-tagline {
+    color: #00eaff;
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+/* Main description */
+.about-page .about-description {
+    max-width: 780px;
+    margin: 0 auto;
+    color: #d3ddf0;
+    font-size: 17px;
+    line-height: 1.8;
+}
+
+/* Features section */
+.about-page .about-features {
+    margin-top: 35px;
+}
+
+.about-page h2 {
+    text-align: center;
+    color: #00eaff;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+/* Feature cards */
+.about-page .about-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(220px, 1fr)
+    );
+    gap: 20px;
+}
+
+.about-page .about-feature-card {
+    padding: 25px;
+    background: #111a30;
+    border: 1px solid #283956;
+    border-radius: 14px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.about-page .about-feature-card:hover {
+    transform: translateY(-5px);
+    border-color: #00eaff;
+}
+
+.about-page .about-feature-card h3 {
+    color: #ff42e6;
+    margin-bottom: 12px;
+}
+
+.about-page .about-feature-card p {
+    color: #c8d4e8;
+    line-height: 1.6;
+}
+
+/* Back to Gallery button */
+.about-page .about-back-link {
+    display: block;
+    width: fit-content;
+    margin: 35px auto;
+    padding: 13px 25px;
+    color: #00eaff;
+    border: 1px solid #00eaff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.about-page .about-back-link:hover {
+    background: #00eaff;
+    color: #07101d;
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+    .about-page {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    .about-page .about-hero {
+        padding: 30px 18px;
+    }
+}
