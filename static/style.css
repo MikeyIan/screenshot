@@ -2021,10 +2021,10 @@ footer span {
     border-radius: 12px;
 }
 
-/* Give gallery images a consistent size */
-.screenshot-card img {
+/* Only resize the main screenshot image */
+.screenshot-card .image-container img {
     width: 100%;
-    height: 210px;
+    height: 100%;
     object-fit: cover;
 }
 
