@@ -2079,3 +2079,69 @@ footer span {
     font-size: 12px;
     margin-top: 4px;
 }
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 2A.2
+   Screenshot Detail Page Comments & Reactions
+   ========================================== */
+
+/* Give each comment its own dark box */
+.view-comment-item {
+    background: #131d32;
+    border: 1px solid #26334e;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+}
+
+/* Display the username in cyan */
+.view-comment-item .comment-username {
+    color: #22d3ee;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Highlight the username when hovered */
+.view-comment-item .comment-username:hover {
+    color: #ff4fd8;
+}
+
+/* Style the date and time */
+.view-comment-item .comment-date {
+    color: #94a3b8;
+    font-size: 12px;
+    margin: 6px 0 10px;
+}
+
+/* Make the comment message easy to read */
+.view-comment-item .comment-message {
+    color: #e2e8f0;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Arrange reactions horizontally on the detail page */
+.view-reactions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 24px 0;
+}
+
+/* Prevent reaction forms from taking up full width */
+.view-reactions form {
+    display: inline-flex;
+    width: auto;
+    margin: 0;
+}
+
+/* Make Like, Cry, and Smile buttons compact */
+.view-reactions .reaction-button {
+    width: auto;
+    padding: 9px 14px;
+    font-size: 14px;
+    white-space: nowrap;
+}
