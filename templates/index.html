@@ -406,20 +406,33 @@
 
                                     {% for user_comment in screenshot_comments %}
 
-                                        <div class="user-comment">
+                                      <!-- FINAL PEER REVIEW UPDATE - STEP 3 -->
+                                 <!-- Displays each homepage comment in its own styled box -->
+                                     <div class="user-comment comment-item">
 
-                                            <div class="comment-content">
+                                            <!-- FINAL PEER REVIEW UPDATE - STEP 3.1 -->
+<!-- Display username, posting date, and comment -->
 
-                                                <strong>
-                                                    {{ user_comment.username }}
-                                                </strong>
+<div class="comment-content">
 
-                                                <p>
-                                                    {{ user_comment.comment_text }}
-                                                </p>
+    <!-- Username of the person who posted -->
+    <strong class="comment-username">
+        @{{ user_comment.username }}
+    </strong>
 
-                                            </div>
+    <!-- Date and time the comment was posted -->
+    <p class="comment-date">
+        🕒 {{ user_comment.created_at.strftime(
+            '%b %d, %Y at %I:%M %p'
+        ) if user_comment.created_at else 'Date unavailable' }}
+    </p>
 
+    <!-- The user's comment -->
+    <p class="comment-message">
+        {{ user_comment.comment_text }}
+    </p>
+
+</div>
 
                                             <!-- DELETE OWN COMMENT -->
 
