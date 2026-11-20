@@ -10,8 +10,47 @@
 
 <main class="about-page">
 
-    <!-- Animated screenshot background
-         will be added in a later step -->
+    
+<!-- ==========================================
+     FINAL PEER REVIEW UPDATE - STEP 13B
+     Animated Screenshot Background
+     ========================================== -->
+
+<!-- Display screenshots loaded from the database -->
+{% if background_images %}
+
+<div class="about-background" aria-hidden="true">
+
+    <!-- Repeat images for a continuous scrolling effect -->
+    <div class="about-background-track">
+
+        {% for image_url in background_images %}
+        <img
+            src="{{ image_url }}"
+            alt=""
+            class="about-background-image"
+            loading="lazy"
+        >
+        {% endfor %}
+
+        {% for image_url in background_images %}
+        <img
+            src="{{ image_url }}"
+            alt=""
+            class="about-background-image"
+            loading="lazy"
+        >
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+<!-- Dark overlay to keep the About text readable -->
+<div class="about-background-overlay" aria-hidden="true"></div>
+
 
     <!-- About page heading -->
     <section class="about-hero">
