@@ -139,26 +139,36 @@
 
                 {% for user_comment in comments %}
 
-                    <div class="view-comment">
+<!-- ==========================================
+     FINAL PEER REVIEW UPDATE - STEP 2A
+     Display comment author, date, and time
+     ========================================== -->
 
-                        <div class="view-comment-text">
+<div class="view-comment-text">
 
-                            <a href="{{ url_for(
-                                'profile',
-                                username=user_comment.username
-                            ) }}">
-                                <strong>
-                                    @{{ user_comment.username }}
-                                </strong>
-                            </a>
+    <!-- Username links to the user's profile -->
+    <a href="{{ url_for(
+        'profile',
+        username=user_comment.username
+    ) }}" class="comment-username">
+        <strong>
+            @{{ user_comment.username }}
+        </strong>
+    </a>
 
-                            <p>
-                                {{ user_comment.comment_text }}
-                            </p>
+    <!-- Display when the comment was posted -->
+    <p class="comment-date">
+        🕒 {{ user_comment.created_at.strftime(
+            '%b %d, %Y at %I:%M %p'
+        ) if user_comment.created_at else 'Date unavailable' }}
+    </p>
 
-                        </div>
+    <!-- Display the actual comment -->
+    <p class="comment-message">
+        {{ user_comment.comment_text }}
+    </p>
 
-
+</div>
                         {% if session.get('user_id')
                               == user_comment.user_id %}
 
