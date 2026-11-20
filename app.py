@@ -712,8 +712,7 @@ def about():
         background_images=background_images
     )
 
-    # Loads the About page from templates/about.html.
-    return render_template("about.html")
+   
 
 
 # ============================================================
