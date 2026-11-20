@@ -667,6 +667,24 @@ def index():
         comments_by_screenshot=comments_by_screenshot
     )
 
+        # WEEK 3
+        comments_by_screenshot=comments_by_screenshot
+    )
+
+
+# ============================================================
+# FINAL PEER REVIEW UPDATE - STEP 8
+# ABOUT PAGE ROUTE
+# ============================================================
+
+# Creates the /about page for MikeyIan SCREENSHOT.
+@app.route("/about")
+def about():
+
+    # Loads the About page from templates/about.html.
+    return render_template("about.html")
+
+
 # ============================================================
 # WEEK 4 UPDATE - SCREENSHOT VIEWING MODE
 # ============================================================
