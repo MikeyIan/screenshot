@@ -667,10 +667,7 @@ def index():
         comments_by_screenshot=comments_by_screenshot
     )
 
-        # WEEK 3
-        comments_by_screenshot=comments_by_screenshot
-    )
-
+       
 
 # ============================================================
 # FINAL PEER REVIEW UPDATE - STEP 8
