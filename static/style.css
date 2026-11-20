@@ -2510,3 +2510,61 @@ footer span {
         animation: none;
     }
 }
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 13D
+   Make Animated Screenshots Visible
+   ========================================== */
+
+/* Keep the About page centered */
+.about-page {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* Display screenshots above the About information */
+.about-page .about-background {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: 180px;
+    margin: 0 auto 30px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Five screenshots in one moving row */
+.about-page .about-background-track {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    width: max-content;
+    height: 100%;
+    animation: aboutScroll 100s linear infinite;
+}
+
+/* Keep each screenshot small */
+.about-page .about-background-image {
+    display: block;
+    flex: 0 0 calc((100vw - 48px) / 5);
+    width: calc((100vw - 48px) / 5);
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Remove the overlay from the screenshot strip */
+.about-page .about-background-overlay {
+    display: none;
+}
+
+/* Keep the About content below the images */
+.about-page .about-hero,
+.about-page .about-features,
+.about-page .about-footer {
+    position: relative;
+    z-index: 1;
+}
+
