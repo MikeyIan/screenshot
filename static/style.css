@@ -2145,3 +2145,149 @@ footer span {
     font-size: 14px;
     white-space: nowrap;
 }
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 6
+   Fix Screenshot Detail Page Alignment
+   ========================================== */
+
+/* Center the screenshot image */
+.view-page .view-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 20px auto 0;
+}
+
+/* Keep the screenshot centered and prevent it
+   from becoming too large */
+.view-page .view-large-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 12px;
+}
+
+/* Make the screenshot information section
+   use the available width */
+.view-page .view-info {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Center the title, uploader, views,
+   and screenshot description */
+.view-page .view-info > h1,
+.view-page .view-info > .view-user,
+.view-page .view-info > .view-count,
+.view-page .view-info > .view-description {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Style and space the screenshot title */
+.view-page .view-info > h1 {
+    font-size: 30px;
+    margin-top: 18px;
+    margin-bottom: 10px;
+}
+
+/* Add spacing to the uploader, views,
+   and description */
+.view-page .view-info > .view-user,
+.view-page .view-info > .view-count,
+.view-page .view-info > .view-description {
+    margin-top: 6px;
+    margin-bottom: 8px;
+}
+
+/* Center Like, Cry, and Smile buttons
+   directly underneath the screenshot details */
+.view-page .view-reactions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 24px auto;
+}
+
+/* Prevent reaction forms from stretching */
+.view-page .view-reactions form {
+    display: inline-flex;
+    width: auto;
+    margin: 0;
+}
+
+/* Keep reaction buttons compact */
+.view-page .view-reactions .reaction-button {
+    width: auto;
+    padding: 9px 14px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* Keep the comments section left-aligned */
+.view-page .view-comments {
+    width: 100%;
+    margin-top: 25px;
+    text-align: left;
+}
+
+/* Display each comment in a separate box */
+.view-page .view-comment-item {
+    background: #131d32;
+    border: 1px solid #26334e;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+    text-align: left;
+}
+
+/* Keep usernames cyan */
+.view-page .comment-username {
+    color: #22d3ee;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Style the comment date and time */
+.view-page .comment-date {
+    color: #94a3b8;
+    font-size: 12px;
+    margin: 6px 0 10px;
+}
+
+/* Make comment text readable */
+.view-page .comment-message {
+    color: #e2e8f0;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Adjust layout for mobile devices */
+@media (max-width: 600px) {
+
+    .view-page .view-large-image {
+        max-height: 350px;
+    }
+
+    .view-page .view-info > h1 {
+        font-size: 24px;
+    }
+
+    .view-page .view-comment-item {
+        padding: 12px;
+    }
+}
