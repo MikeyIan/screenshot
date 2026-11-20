@@ -1,0 +1,94 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ==========================================
+     FINAL PEER REVIEW UPDATE - STEP 7
+     ABOUT PAGE FOR MIKEYIAN SCREENSHOT
+     ========================================== -->
+
+<main class="about-page">
+
+    <!-- Animated screenshot background
+         will be added in a later step -->
+
+    <!-- About page heading -->
+    <section class="about-hero">
+
+        <h1>About MikeyIan SCREENSHOT</h1>
+
+        <p class="about-tagline">
+            Capture • Share • Play • Repeat
+        </p>
+
+        <!-- Explain the purpose of the website -->
+        <p class="about-description">
+            MikeyIan SCREENSHOT is a gaming community
+            where players can share their favorite
+            gaming moments through screenshots.
+
+            Whether it's an amazing achievement,
+            a funny moment, or a memorable adventure,
+            SCREENSHOT gives gamers a place to
+            share their experiences.
+        </p>
+
+    </section>
+
+    <!-- Website features -->
+    <section class="about-features">
+
+        <h2>What Can You Do?</h2>
+
+        <div class="about-feature-grid">
+
+            <div class="about-feature-card">
+                <h3>📸 Upload Screenshots</h3>
+                <p>
+                    Share your favorite gaming moments
+                    with the community.
+                </p>
+            </div>
+
+            <div class="about-feature-card">
+                <h3>❤️ React to Posts</h3>
+                <p>
+                    Use Like, Cry, and Smile reactions
+                    to respond to screenshots.
+                </p>
+            </div>
+
+            <div class="about-feature-card">
+                <h3>💬 Leave Comments</h3>
+                <p>
+                    Connect with other gamers by
+                    commenting on their screenshots.
+                </p>
+            </div>
+
+            <div class="about-feature-card">
+                <h3>🎮 Explore the Gallery</h3>
+                <p>
+                    Browse screenshots uploaded
+                    by members of the community.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Return to the homepage -->
+    <div class="about-footer">
+
+        <a href="{{ url_for('index') }}"
+           class="about-back-button">
+            ← Back to Gallery
+        </a>
+
+    </div>
+
+</main>
+
+{% endblock %}
