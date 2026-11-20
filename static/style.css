@@ -1959,3 +1959,52 @@ footer span {
 .view-page a:hover {
     color: #ff4fd8;
 }
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 2
+   Horizontal Reaction Buttons
+   ========================================== */
+
+/* Keeps the reaction section neatly spaced */
+.reaction-section {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+/* Places Like, Cry, and Smile side by side */
+.reaction-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+/* Prevents each reaction form from taking
+   up the entire width of the screenshot card */
+.reaction-buttons form {
+    display: inline-flex;
+    width: auto;
+    margin: 0;
+}
+
+/* Makes reaction buttons smaller and tidier */
+.reaction-buttons .reaction-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: auto;
+    padding: 7px 11px;
+    font-size: 13px;
+    line-height: 1.3;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* Makes reaction counts easy to read */
+.reaction-buttons .reaction-count {
+    font-size: 12px;
+    font-weight: bold;
+}
