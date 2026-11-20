@@ -667,6 +667,54 @@ def index():
         comments_by_screenshot=comments_by_screenshot
     )
 
+       
+
+
+# ============================================================
+# FINAL PEER REVIEW UPDATE - STEP 13A
+# Load Gallery Screenshots for About Page Background
+# ============================================================
+
+@app.route("/about")
+def about():
+
+    # Connect to the existing Neon PostgreSQL database.
+    db = get_db()
+    cursor = db.cursor()
+
+    # Get up to 12 recent screenshots for the background.
+    cursor.execute("""
+        SELECT filename
+        FROM screenshots
+        WHERE filename IS NOT NULL
+        ORDER BY created_at DESC
+        LIMIT 12
+    """)
+
+    rows = cursor.fetchall()
+
+    # Close the database connection.
+    cursor.close()
+    db.close()
+
+    # Generate temporary image URLs using existing storage.
+    background_images = []
+
+    for row in rows:
+        image_url = create_image_url(row["filename"])
+
+        if image_url:
+            background_images.append(image_url)
+
+    # Send the images to the About page template.
+    return render_template(
+        "about.html",
+        background_images=background_images
+    )
+
+   
+
+
 # ============================================================
 # WEEK 4 UPDATE - SCREENSHOT VIEWING MODE
 # ============================================================

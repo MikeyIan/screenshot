@@ -1910,3 +1910,661 @@ footer span {
     }
 
 }
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 1
+   Screenshot Detail Page Improvements
+   ========================================== */
+
+/* Centers the screenshot on the detail page */
+.view-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Prevents screenshots from appearing too large */
+.view-large-image {
+    display: block;
+    max-width: 100%;
+    max-height: 65vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 12px;
+}
+
+/* Prevents long content from forcing
+   the screenshot detail page to scroll sideways */
+.view-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+}
+
+/* Makes links easier to read on dark backgrounds */
+.view-page a {
+    color: #22d3ee;
+    text-decoration: none;
+}
+
+/* Changes links to pink when hovered */
+.view-page a:hover {
+    color: #ff4fd8;
+}
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 2
+   Horizontal Reaction Buttons
+   ========================================== */
+
+/* Keeps the reaction section neatly spaced */
+.reaction-section {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+/* Places Like, Cry, and Smile side by side */
+.reaction-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+/* Prevents each reaction form from taking
+   up the entire width of the screenshot card */
+.reaction-buttons form {
+    display: inline-flex;
+    width: auto;
+    margin: 0;
+}
+
+/* Makes reaction buttons smaller and tidier */
+.reaction-buttons .reaction-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: auto;
+    padding: 7px 11px;
+    font-size: 13px;
+    line-height: 1.3;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* Makes reaction counts easy to read */
+.reaction-buttons .reaction-count {
+    font-size: 12px;
+    font-weight: bold;
+}
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 2B
+   Homepage Screenshot Card Improvements
+   ========================================== */
+
+/* Keep screenshot cards consistent */
+.screenshot-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+/* Only resize the main screenshot image */
+.screenshot-card .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Add breathing room between card elements */
+.screenshot-card .card-content {
+    padding: 16px;
+}
+
+/* Make reaction buttons compact */
+.screenshot-card .reaction-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+/* Style links for the dark neon theme */
+.screenshot-card a {
+    color: #22d3ee;
+}
+
+.screenshot-card a:hover {
+    color: #ff4fd8;
+}
+
+/* Add a visual separation for comments */
+.screenshot-card .comments-section {
+    border-top: 1px solid #26334e;
+    margin-top: 12px;
+    padding-top: 12px;
+}
+
+/* Display comments in individual boxes */
+.screenshot-card .comment-item {
+    background: #131d32;
+    border: 1px solid #26334e;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+}
+
+/* Make the comment author stand out */
+.screenshot-card .comment-username {
+    color: #22d3ee;
+    font-weight: bold;
+}
+
+/* Style comment timestamps */
+.screenshot-card .comment-date {
+    color: #94a3b8;
+    font-size: 12px;
+    margin-top: 4px;
+}
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 2A.2
+   Screenshot Detail Page Comments & Reactions
+   ========================================== */
+
+/* Give each comment its own dark box */
+.view-comment-item {
+    background: #131d32;
+    border: 1px solid #26334e;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+}
+
+/* Display the username in cyan */
+.view-comment-item .comment-username {
+    color: #22d3ee;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Highlight the username when hovered */
+.view-comment-item .comment-username:hover {
+    color: #ff4fd8;
+}
+
+/* Style the date and time */
+.view-comment-item .comment-date {
+    color: #94a3b8;
+    font-size: 12px;
+    margin: 6px 0 10px;
+}
+
+/* Make the comment message easy to read */
+.view-comment-item .comment-message {
+    color: #e2e8f0;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Arrange reactions horizontally on the detail page */
+.view-reactions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 24px 0;
+}
+
+/* Prevent reaction forms from taking up full width */
+.view-reactions form {
+    display: inline-flex;
+    width: auto;
+    margin: 0;
+}
+
+/* Make Like, Cry, and Smile buttons compact */
+.view-reactions .reaction-button {
+    width: auto;
+    padding: 9px 14px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 6
+   Fix Screenshot Detail Page Alignment
+   ========================================== */
+
+/* Center the screenshot image */
+.view-page .view-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 20px auto 0;
+}
+
+/* Keep the screenshot centered and prevent it
+   from becoming too large */
+.view-page .view-large-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 12px;
+}
+
+/* Make the screenshot information section
+   use the available width */
+.view-page .view-info {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Center the title, uploader, views,
+   and screenshot description */
+.view-page .view-info > h1,
+.view-page .view-info > .view-user,
+.view-page .view-info > .view-count,
+.view-page .view-info > .view-description {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Style and space the screenshot title */
+.view-page .view-info > h1 {
+    font-size: 30px;
+    margin-top: 18px;
+    margin-bottom: 10px;
+}
+
+/* Add spacing to the uploader, views,
+   and description */
+.view-page .view-info > .view-user,
+.view-page .view-info > .view-count,
+.view-page .view-info > .view-description {
+    margin-top: 6px;
+    margin-bottom: 8px;
+}
+
+/* Center Like, Cry, and Smile buttons
+   directly underneath the screenshot details */
+.view-page .view-reactions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 24px auto;
+}
+
+/* Prevent reaction forms from stretching */
+.view-page .view-reactions form {
+    display: inline-flex;
+    width: auto;
+    margin: 0;
+}
+
+/* Keep reaction buttons compact */
+.view-page .view-reactions .reaction-button {
+    width: auto;
+    padding: 9px 14px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* Keep the comments section left-aligned */
+.view-page .view-comments {
+    width: 100%;
+    margin-top: 25px;
+    text-align: left;
+}
+
+/* Display each comment in a separate box */
+.view-page .view-comment-item {
+    background: #131d32;
+    border: 1px solid #26334e;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+    text-align: left;
+}
+
+/* Keep usernames cyan */
+.view-page .comment-username {
+    color: #22d3ee;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Style the comment date and time */
+.view-page .comment-date {
+    color: #94a3b8;
+    font-size: 12px;
+    margin: 6px 0 10px;
+}
+
+/* Make comment text readable */
+.view-page .comment-message {
+    color: #e2e8f0;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Adjust layout for mobile devices */
+@media (max-width: 600px) {
+
+    .view-page .view-large-image {
+        max-height: 350px;
+    }
+
+    .view-page .view-info > h1 {
+        font-size: 24px;
+    }
+
+    .view-page .view-comment-item {
+        padding: 12px;
+    }
+}
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 9
+   ABOUT PAGE NEON STYLING
+   ========================================== */
+
+/* Main About page container */
+.about-page {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 30px 24px;
+    color: #ffffff;
+}
+
+/* Center the introduction */
+.about-page .about-hero {
+    text-align: center;
+    padding: 50px 25px;
+    margin-bottom: 35px;
+    background: linear-gradient(
+        135deg,
+        #11152d,
+        #180b29,
+        #071b29
+    );
+    border: 1px solid #263754;
+    border-radius: 18px;
+}
+
+/* Neon heading */
+.about-page h1 {
+    color: #ff42e6;
+    font-size: clamp(30px, 5vw, 48px);
+    margin-bottom: 15px;
+    text-shadow: 0 0 18px #a020a0;
+}
+
+/* Subtitle */
+.about-page .about-tagline {
+    color: #00eaff;
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+/* Main description */
+.about-page .about-description {
+    max-width: 780px;
+    margin: 0 auto;
+    color: #d3ddf0;
+    font-size: 17px;
+    line-height: 1.8;
+}
+
+/* Features section */
+.about-page .about-features {
+    margin-top: 35px;
+}
+
+.about-page h2 {
+    text-align: center;
+    color: #00eaff;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+/* Feature cards */
+.about-page .about-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(220px, 1fr)
+    );
+    gap: 20px;
+}
+
+.about-page .about-feature-card {
+    padding: 25px;
+    background: #111a30;
+    border: 1px solid #283956;
+    border-radius: 14px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.about-page .about-feature-card:hover {
+    transform: translateY(-5px);
+    border-color: #00eaff;
+}
+
+.about-page .about-feature-card h3 {
+    color: #ff42e6;
+    margin-bottom: 12px;
+}
+
+.about-page .about-feature-card p {
+    color: #c8d4e8;
+    line-height: 1.6;
+}
+
+/* Back to Gallery button */
+.about-page .about-back-link {
+    display: block;
+    width: fit-content;
+    margin: 35px auto;
+    padding: 13px 25px;
+    color: #00eaff;
+    border: 1px solid #00eaff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.about-page .about-back-link:hover {
+    background: #00eaff;
+    color: #07101d;
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+    .about-page {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    .about-page .about-hero {
+        padding: 30px 18px;
+    }
+}
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 13C
+   About Page - Five Moving Screenshots
+   ========================================== */
+
+/* Keep the background inside the About page */
+.about-page {
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    isolation: isolate;
+}
+
+/* Background area */
+.about-page .about-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* Put five screenshots side by side */
+.about-page .about-background-track {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    width: max-content;
+    height: 100%;
+    animation: aboutScroll 100s linear infinite;
+}
+
+/* Resize each screenshot */
+.about-page .about-background-image {
+    display: block;
+    flex: 0 0 calc((100vw - 48px) / 5);
+    width: calc((100vw - 48px) / 5);
+    height: 220px;
+    max-width: none;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Dark overlay keeps the text readable */
+.about-page .about-background-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.78);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Keep existing About page content above images */
+.about-page .about-hero,
+.about-page .about-features,
+.about-page .about-footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* Move screenshots slowly from right to left */
+@keyframes aboutScroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Smaller screens show fewer images */
+@media (max-width: 768px) {
+    .about-page .about-background-image {
+        flex-basis: 45vw;
+        width: 45vw;
+        height: 160px;
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .about-page .about-background-track {
+        animation: none;
+    }
+}
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 13D
+   Make Animated Screenshots Visible
+   ========================================== */
+
+/* Keep the About page centered */
+.about-page {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* Display screenshots above the About information */
+.about-page .about-background {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: 180px;
+    margin: 0 auto 30px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Five screenshots in one moving row */
+.about-page .about-background-track {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    width: max-content;
+    height: 100%;
+    animation: aboutScroll 100s linear infinite;
+}
+
+/* Keep each screenshot small */
+.about-page .about-background-image {
+    display: block;
+    flex: 0 0 calc((100vw - 48px) / 5);
+    width: calc((100vw - 48px) / 5);
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Remove the overlay from the screenshot strip */
+.about-page .about-background-overlay {
+    display: none;
+}
+
+/* Keep the About content below the images */
+.about-page .about-hero,
+.about-page .about-features,
+.about-page .about-footer {
+    position: relative;
+    z-index: 1;
+}
+
