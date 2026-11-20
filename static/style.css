@@ -1910,3 +1910,52 @@ footer span {
     }
 
 }
+
+/* ==========================================
+   FINAL PEER REVIEW UPDATE - STEP 1
+   Screenshot Detail Page Improvements
+   ========================================== */
+
+/* Centers the screenshot on the detail page */
+.view-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Prevents screenshots from appearing too large */
+.view-large-image {
+    display: block;
+    max-width: 100%;
+    max-height: 65vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 12px;
+}
+
+/* Prevents long content from forcing
+   the screenshot detail page to scroll sideways */
+.view-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+}
+
+/* Makes links easier to read on dark backgrounds */
+.view-page a {
+    color: #22d3ee;
+    text-decoration: none;
+}
+
+/* Changes links to pink when hovered */
+.view-page a:hover {
+    color: #ff4fd8;
+}
